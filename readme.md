@@ -1,5 +1,6 @@
 # Min Svenska
 
+
 [![GitHub license](https://img.shields.io/npm/l/min-svenska)](https://github.com/HerrDima/min-svenska/blob/master/license)
 [![codecov](https://codecov.io/gh/HerrDima/min-svenska/branch/master/graph/badge.svg)](https://codecov.io/gh/HerrDima/min-svenska)
 [![npm version](https://img.shields.io/npm/v/min-svenska.svg)](https://www.npmjs.com/package/min-svenska)
