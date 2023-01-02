@@ -13,6 +13,7 @@
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/HerrDima/min-svenska/github-ci.yml)](https://github.com/HerrDima/min-svenska/actions/workflows/github-ci.yml)
 [![Type definitions](https://img.shields.io/npm/types/min-svenska)](https://www.typescriptlang.org)
 [![Website](https://img.shields.io/website?url=https://github.com/HerrDima/min-svenska)](https://github.com/HerrDima/min-svenska)
+[![Package Quality](https://packagequality.com/shield/typescript-project.svg)](https://packagequality.com/#?package=typescript-project)
 [![GitHub stars](https://img.shields.io/github/stars/HerrDima/min-svenska?style=social)](https://github.com/HerrDima/min-svenska)
 
 
