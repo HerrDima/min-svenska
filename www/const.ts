@@ -15,7 +15,7 @@ export const googleAdSenseTopAdId = '4086736743';
 export const siteDomain = 'my-best-site.com';
 export const httpsSiteDomain = `https://${siteDomain}`;
 export const openGraphLocaleName = 'en_US';
-export const copyrightName = 'My Best Site Dot Com';
+export const copyrightName = 'Min Svenska';
 // special file 1/2
 export const companyLogoPngFileName = 'company-logo.png';
 // special file 2/2
