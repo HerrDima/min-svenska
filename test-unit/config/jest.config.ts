@@ -1,9 +1,10 @@
-// eslint-disable-next-line unicorn/prefer-module
-module.exports = {
-    bail: true, // stop after first failing test
+import type {Config} from 'jest';
+
+const config: Config = {
+    bail: false, // true - stop after first failing test
     collectCoverage: true,
     errorOnDeprecated: true,
-    injectGlobals: true,
+    injectGlobals: false,
     maxConcurrency: 1,
     maxWorkers: 1,
     moduleNameMapper: {
@@ -13,8 +14,11 @@ module.exports = {
     passWithNoTests: true,
     preset: 'ts-jest',
     rootDir: '../../',
-    setupFilesAfterEnv: ['./test-unit/config/setup-jest.ts'],
+    setupFilesAfterEnv: [],
     silent: true,
     testEnvironment: 'jsdom', // @testing-library/jest-dom
     testTimeout: 10e3,
 };
+
+// eslint-disable-next-line import/no-default-export
+export default config;

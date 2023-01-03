@@ -1,4 +1,8 @@
-/* global describe, it, expect */
+/* global HTMLElement */
+
+import assert from 'node:assert/strict';
+
+import {describe, test} from '@jest/globals';
 import {useSearchParams} from 'react-router-dom';
 import {useEffect} from 'react';
 import {render, screen} from '@testing-library/react';
@@ -8,7 +12,7 @@ import {TestUtilNavigationProvider} from '../../../test-unit/util/test-util-navi
 import {NavigationLink} from './navigation-link';
 
 describe('NavigationLink', () => {
-    it('default state', () => {
+    test('default state', () => {
         // eslint-disable-next-line react/no-multi-comp
         function DefaultState(): JSX.Element {
             return <NavigationLink to="/default-state" />;
@@ -18,12 +22,12 @@ describe('NavigationLink', () => {
 
         const link = container.querySelector('a[href="/default-state"]');
 
-        expect(link).toBeInTheDocument();
+        assert.equal(link instanceof HTMLElement, true);
 
         unmount();
     });
 
-    it('with props', () => {
+    test('with props', () => {
         // eslint-disable-next-line react/no-multi-comp
         function WithProps(): JSX.Element {
             return (
@@ -39,13 +43,13 @@ describe('NavigationLink', () => {
             'a.props-class-name[href="/with-props"][class="props-class-name"][title="props-title"]'
         );
 
-        expect(link).toBeInTheDocument();
-        expect(screen.getByText('some text')).toBeInTheDocument();
+        assert.equal(link instanceof HTMLElement, true);
+        assert.equal(screen.getByText('some text') instanceof HTMLElement, true);
 
         unmount();
     });
 
-    it('use query by default', () => {
+    test('use query by default', () => {
         // eslint-disable-next-line react/no-multi-comp
         function UseQuery(): JSX.Element {
             const [ignoredSearch, setSearch] = useSearchParams();
@@ -61,12 +65,12 @@ describe('NavigationLink', () => {
 
         const link = container.querySelector('a[href="/use-query-by-default?nick=mike"]');
 
-        expect(link).toBeInTheDocument();
+        assert.equal(link instanceof HTMLElement, true);
 
         unmount();
     });
 
-    it('use query by props', () => {
+    test('use query by props', () => {
         // eslint-disable-next-line react/no-multi-comp
         function UseQuery(): JSX.Element {
             const [ignoredSearch, setSearch] = useSearchParams();
@@ -82,12 +86,12 @@ describe('NavigationLink', () => {
 
         const link = container.querySelector('a[href="/use-query-by-props?nick=mike"]');
 
-        expect(link).toBeInTheDocument();
+        assert.equal(link instanceof HTMLElement, true);
 
         unmount();
     });
 
-    it('do not use query', () => {
+    test('do not use query', () => {
         // eslint-disable-next-line react/no-multi-comp
         function DoNotUseQuery(): JSX.Element {
             const [ignoredSearch, setSearch] = useSearchParams();
@@ -103,12 +107,12 @@ describe('NavigationLink', () => {
 
         const link = container.querySelector('a[href="/do-not-use-query"]');
 
-        expect(link).toBeInTheDocument();
+        assert.equal(link instanceof HTMLElement, true);
 
         unmount();
     });
 
-    it('use own queries', () => {
+    test('use own queries', () => {
         // eslint-disable-next-line react/no-multi-comp
         function UseOwnQueries(): JSX.Element {
             const [ignoredSearch, setSearch] = useSearchParams();
@@ -124,12 +128,12 @@ describe('NavigationLink', () => {
 
         const link = container.querySelector('a[href="/use-own-queries?nick=mike&foo=bar"]');
 
-        expect(link).toBeInTheDocument();
+        assert.equal(link instanceof HTMLElement, true);
 
         unmount();
     });
 
-    it('use own queries only', () => {
+    test('use own queries only', () => {
         // eslint-disable-next-line react/no-multi-comp
         function UseOwnQueriesOnly(): JSX.Element {
             const [ignoredSearch, setSearch] = useSearchParams();
@@ -145,7 +149,7 @@ describe('NavigationLink', () => {
 
         const link = container.querySelector('a[href="/use-own-queries-only?foo=bar"]');
 
-        expect(link).toBeInTheDocument();
+        assert.equal(link instanceof HTMLElement, true);
 
         unmount();
     });
