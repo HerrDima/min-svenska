@@ -1,4 +1,4 @@
-/* global document, Image, HTMLImageElement, Audio, HTMLAudioElement, File, FormData, location */
+/* global document, Image, HTMLImageElement, Audio, HTMLAudioElement, HTMLVideoElement, File, FormData, location */
 import {Rule, RuleObject} from 'rc-field-form/lib/interface';
 
 import {generatePath} from '../../../util/url';
@@ -50,6 +50,22 @@ export function fetchAudio(pathToAudio: string): Promise<HTMLAudioElement> {
     );
 }
 
+export function fetchVideo(pathToVideo: string): Promise<HTMLVideoElement> {
+    const video: HTMLVideoElement = document.createElement('video');
+
+    return new Promise<HTMLVideoElement>(
+        (resolve: PromiseResolveType<HTMLVideoElement>, reject: PromiseResolveType<unknown>) => {
+            video.addEventListener('loadedmetadata', () => resolve(video), false);
+
+            video.addEventListener('error', reject, false);
+
+            video.preload = 'metadata';
+            video.src = pathToVideo;
+        }
+    );
+}
+
+// eslint-disable-next-line complexity
 export async function uploadFile(file: File, fileSizeLimitBytes: number): Promise<ArticleFileType> {
     const formData = new FormData();
 
@@ -85,6 +101,18 @@ export async function uploadFile(file: File, fileSizeLimitBytes: number): Promis
                 duration,
             };
         }
+
+        case ArticleFileTypeEnum.video: {
+            const {duration, videoWidth, videoHeight} = await fetchVideo(pathToFile);
+
+            return {
+                ...fileInfo,
+                duration,
+                height: videoHeight,
+                width: videoWidth,
+            };
+        }
+
         case ArticleFileTypeEnum.unknown: {
             return fileInfo;
         }
@@ -213,6 +241,12 @@ export function getIsAudio(fileName: string): boolean {
     return ['mp3', 'wav'].includes(fileExtension);
 }
 
+export function getIsVideo(fileName: string): boolean {
+    const fileExtension = getFileExtension(fileName);
+
+    return ['mp4'].includes(fileExtension);
+}
+
 /*
 export async function getFileMarkdownByName(fileName: string): Promise<string> {
     const pathToFile = getPathToFile(fileName);
@@ -252,6 +286,10 @@ export function getFileMarkdownByFullInfo(
         }
         case ArticleFileTypeEnum.audio: {
             return `<audio data-duration="${duration}" data-title="${title}" src="${pathToFile}"></audio>`;
+        }
+        case ArticleFileTypeEnum.video: {
+            // eslint-disable-next-line max-len
+            return `<video width="${width}" height="${height}" data-duration="${duration}" data-title="${title}" src="${pathToFile}" type="video/mp4" controls></video>`;
         }
         case ArticleFileTypeEnum.unknown: {
             return `<a href="${pathToFile}" target="_blank" download="${textToSlug(title)}">${name}</a>`;

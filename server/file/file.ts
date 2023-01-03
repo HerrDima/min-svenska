@@ -10,7 +10,7 @@ import webpConverter from 'webp-converter';
 import {PromiseResolveType} from '../../www/util/promise';
 import {getRandomString} from '../../www/util/string';
 import {getStringFromUnknown} from '../../www/util/type';
-import {getFileExtension, getIsAudio, getIsImage} from '../../www/page/cms/cms-article/cms-article-helper';
+import {getFileExtension, getIsAudio, getIsImage, getIsVideo} from '../../www/page/cms/cms-article/cms-article-helper';
 import {ArticleFileType, ArticleFileTypeEnum} from '../article/article-type';
 import {fileSizeLimit} from '../../www/page/cms/cms-article/cms-article-const';
 
@@ -104,6 +104,20 @@ export async function uploadFile(request: FastifyRequest): Promise<ArticleFileTy
         };
 
         return uploadResponseAudio;
+    }
+
+    if (getIsVideo(uniqueFileName)) {
+        const uploadResponseVideo: ArticleFileType = {
+            duration: 0,
+            height: 0,
+            name: uniqueFileName,
+            size: uploadResponse.size,
+            title: '',
+            type: ArticleFileTypeEnum.video,
+            width: 0,
+        };
+
+        return uploadResponseVideo;
     }
 
     return uploadResponse;

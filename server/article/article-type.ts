@@ -15,6 +15,7 @@ export enum ArticleFileTypeEnum {
     audio = 'audio',
     image = 'image',
     unknown = 'unknown',
+    video = 'video',
 }
 
 export type ArticleFileType = {
