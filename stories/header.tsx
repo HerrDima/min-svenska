@@ -1,5 +1,5 @@
 import {Button} from './button';
-import './header.css';
+import headerStyle from './header.scss';
 
 type UserType = {
     name: string;
@@ -17,7 +17,7 @@ export function Header(props: HeaderPropsType): JSX.Element {
 
     return (
         <header>
-            <div className="wrapper">
+            <div className={headerStyle.wrapper}>
                 <div>
                     <svg height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg">
                         <g fill="none" fillRule="evenodd">
@@ -34,7 +34,7 @@ export function Header(props: HeaderPropsType): JSX.Element {
                 <div>
                     {user ? (
                         <>
-                            <span className="welcome">
+                            <span className={headerStyle.welcome}>
                                 Welcome, <b>{user.name}</b>!
                             </span>
                             <Button label="Log out" onClick={onLogout} size="small" />

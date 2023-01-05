@@ -1,7 +1,7 @@
 import {useState} from 'react';
 
 import {Header} from './header';
-import './page.css';
+import pageStyle from './page.scss';
 
 type PageUserType = {
     name: string;
@@ -9,6 +9,8 @@ type PageUserType = {
 
 export function Page(): JSX.Element {
     const [user, setUser] = useState<PageUserType | null>(null);
+
+    console.log(pageStyle);
 
     return (
         <article>
