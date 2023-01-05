@@ -5,10 +5,6 @@
 # npm
 /node_modules/
 
-# webpack
-/webpack/
-/webpack.config.js
-
 # report
 /coverage-ts/
 /tsc-check/

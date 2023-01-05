@@ -61,7 +61,7 @@ const isMakeStaticSite = process.env.MAKE_STATIC_SITE === 'TRUE';
         prefix: `/${uploadFileFolder}/`,
         root: uploadFolder,
         setHeaders: (response: {setHeader: (header: string, value: string) => void}) => {
-            console.info('[ERROR] using fastifyStaticServer: upload foles');
+            console.info('[ERROR] using fastifyStaticServer: upload files');
             response.setHeader('x-warning-get-file', 'need-use-nginx');
         },
     });
