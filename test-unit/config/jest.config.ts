@@ -1,6 +1,6 @@
 import type {Config} from 'jest';
 
-const config: Config = {
+export const jestTestUnitConfig: Config = {
     bail: false, // true - stop after first failing test
     collectCoverage: true,
     errorOnDeprecated: true,
@@ -21,4 +21,4 @@ const config: Config = {
 };
 
 // eslint-disable-next-line import/no-default-export
-export default config;
+export default jestTestUnitConfig;

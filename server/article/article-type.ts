@@ -1,3 +1,4 @@
+import type {PetsdbQueryType, PetsdbReadPageConfigType} from 'petsdb';
 export enum ArticleTypeEnum {
     article = 'article', // usual article
     audioChildrenList = 'audio-children-list', // get all *.mp3 files from every child and makes play list from it
@@ -64,3 +65,9 @@ export type ArticlePreviewType = Pick<
     ArticleType,
     'articleType' | 'fileList' | 'isActive' | 'slug' | 'title' | 'titleImage'
 >;
+
+export type ParsedRequestQueryType = {
+    pageConfig: PetsdbReadPageConfigType<ArticleType>;
+    pick: Array<keyof ArticleType>;
+    query: PetsdbQueryType<ArticleType>;
+};

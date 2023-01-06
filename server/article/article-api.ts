@@ -9,7 +9,7 @@ import {ArticleContextType} from '../../www/client-component/article/article-con
 import {PaginationResultType} from '../data-base/data-base-type';
 
 import {articleCrud} from './article';
-import {ArticleType} from './article-type';
+import {ArticleType, ParsedRequestQueryType} from './article-type';
 import {validateArticle} from './article-validation';
 import {tryQueryStringToRegExp} from './article-util';
 
@@ -46,11 +46,7 @@ export async function getArticleListPagination(
     return articleListPagination;
 }
 
-// eslint-disable-next-line id-length, sonarjs/no-identical-functions
-export async function getArticleListPaginationPick(
-    request: FastifyRequest,
-    reply: FastifyReply
-): Promise<PaginationResultType<Partial<ArticleType>>> {
+function parseRequestQuery(request: FastifyRequest): ParsedRequestQueryType {
     const {pageConfig, pick, query} = Object.assign(
         {
             pageConfig: encodeURIComponent(JSON.stringify(defaultPaginationQuery)),
@@ -72,44 +68,33 @@ export async function getArticleListPaginationPick(
         }
     }
 
+    return {pageConfig: pageConfigParsed, pick: pickParsed, query: queryParsed};
+}
+
+// eslint-disable-next-line id-length
+export async function getArticleListPaginationPick(
+    request: FastifyRequest,
+    reply: FastifyReply
+): Promise<PaginationResultType<Partial<ArticleType>>> {
+    const {query, pageConfig, pick} = parseRequestQuery(request);
+
     const articleListPagination: PaginationResultType<Partial<ArticleType>> =
-        await articleCrud.findManyPaginationPartial(queryParsed, pageConfigParsed, pickParsed);
+        await articleCrud.findManyPaginationPartial(query, pageConfig, pick);
 
     reply.code(200).header(...mainResponseHeader);
 
     return articleListPagination;
 }
 
-// eslint-disable-next-line id-length, sonarjs/no-identical-functions
+// eslint-disable-next-line id-length
 export async function getArticleClientListPaginationPick(
     request: FastifyRequest,
     reply: FastifyReply
 ): Promise<PaginationResultType<Partial<ArticleType>>> {
-    const {pageConfig, pick, query} = Object.assign(
-        {
-            pageConfig: encodeURIComponent(JSON.stringify(defaultPaginationQuery)),
-            pick: encodeURIComponent(JSON.stringify([])),
-            query: encodeURIComponent(JSON.stringify({})),
-        },
-        request.query
-    );
-    const pageConfigParsed: PetsdbReadPageConfigType<ArticleType> = JSON.parse(decodeURIComponent(pageConfig));
-    const pickParsed: Array<keyof ArticleType> = JSON.parse(decodeURIComponent(pick));
-    const queryParsed: PetsdbQueryType<ArticleType> = JSON.parse(decodeURIComponent(query));
-
-    // eslint-disable-next-line no-loops/no-loops, guard-for-in
-    for (const queryKey in queryParsed) {
-        const queryValue = {...queryParsed}[queryKey];
-
-        if (typeof queryValue === 'string') {
-            Object.assign(queryParsed, {[queryKey]: tryQueryStringToRegExp(queryValue)});
-        }
-    }
-
-    queryParsed.isActive = true;
+    const {query, pageConfig, pick} = parseRequestQuery(request);
 
     const articleListPagination: PaginationResultType<Partial<ArticleType>> =
-        await articleCrud.findManyPaginationPartial(queryParsed, pageConfigParsed, pickParsed);
+        await articleCrud.findManyPaginationPartial({...query, isActive: true}, pageConfig, pick);
 
     reply.code(200).header(...mainResponseHeader);
 
@@ -122,8 +107,8 @@ export async function postAdminArticleCreate(
     reply: FastifyReply
 ): Promise<ArticleType | Record<'message', string>> {
     const {body} = request;
-    const parsedData: ArticleType = JSON.parse(String(body || '{}'));
-    const [isValidArticle, modelJsonSchemaValidate] = validateArticle(parsedData);
+    const parsedCreateData: ArticleType = JSON.parse(String(body || '{}'));
+    const [isValidArticle, modelJsonSchemaValidate] = validateArticle(parsedCreateData);
 
     reply.header(...mainResponseHeader);
 
@@ -133,7 +118,7 @@ export async function postAdminArticleCreate(
         return {message: JSON.stringify(modelJsonSchemaValidate.errors)};
     }
 
-    const {id, slug} = parsedData;
+    const {id, slug} = parsedCreateData;
 
     if (id.trim() === '') {
         reply.code(400);
@@ -166,7 +151,7 @@ export async function postAdminArticleCreate(
     const currentDate = new Date().toISOString();
 
     const actualizedArticle: ArticleType = {
-        ...parsedData,
+        ...parsedCreateData,
         createdDate: currentDate,
         updatedDate: currentDate,
     };
@@ -184,8 +169,8 @@ export async function postAdminArticleUpdate(
     reply: FastifyReply
 ): Promise<ArticleType | Record<'message', string>> {
     const {body} = request;
-    const parsedData: ArticleType = JSON.parse(String(body || '{}'));
-    const [isValidArticle, modelJsonSchemaValidate] = validateArticle(parsedData);
+    const parsedUpdateData: ArticleType = JSON.parse(String(body || '{}'));
+    const [isValidArticle, modelJsonSchemaValidate] = validateArticle(parsedUpdateData);
 
     reply.header(...mainResponseHeader);
 
@@ -195,7 +180,7 @@ export async function postAdminArticleUpdate(
         return {message: JSON.stringify(modelJsonSchemaValidate.errors)};
     }
 
-    const {id} = parsedData;
+    const {id} = parsedUpdateData;
 
     if (id.trim() === '') {
         reply.code(400);
@@ -212,7 +197,7 @@ export async function postAdminArticleUpdate(
     }
 
     const actualizedArticle: ArticleType = {
-        ...parsedData,
+        ...parsedUpdateData,
         updatedDate: new Date().toISOString(),
     };
 
