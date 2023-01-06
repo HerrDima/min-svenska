@@ -1,6 +1,6 @@
 /* global MediaMetadataInit */
 
-import {getPathToImage} from '../../page/cms/cms-article/cms-article-helper';
+import {getPathToImage} from '../../util/path';
 import {appIconPngFileName} from '../../const';
 
 export const defaultMediaMetadata: MediaMetadataInit = {

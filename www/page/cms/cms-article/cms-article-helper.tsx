@@ -8,18 +8,14 @@ import {PromiseResolveType} from '../../../util/promise';
 import {apiUrl} from '../../../../server/const';
 import {FetchMethodEnum, fetchX} from '../../../util/fetch';
 import {deleteArticle} from '../../../service/article/article-api';
-import {httpsSiteDomain} from '../../../const';
-import {getArticleLinkToViewClient} from '../../../client-component/article/article-helper';
 import {ArticleFileType, ArticleFileTypeEnum} from '../../../../server/article/article-type';
 import {makeArticleFileSchema} from '../../../../server/article/article-validation';
 import {NeverError} from '../../../util/error';
 
+import {getPathToFile} from '../../../util/path';
+
 import {ArticleForValidationType, MakeSlugValidatorArgumentType} from './cms-article-type';
 import {CmsArticleModeEnum} from './cms-article-const';
-
-export function getPathToFile(uniqueFileName: string): string {
-    return apiUrl.fileGet.replace(':fileName', uniqueFileName);
-}
 
 export function fetchImage(pathToImage: string): Promise<HTMLImageElement> {
     const image = new Image();
@@ -126,12 +122,6 @@ export async function uploadFile(file: File, fileSizeLimitBytes: number): Promis
     return fileInfo;
 }
 
-export function getPathToImage(uniqueFileName: string, imageConfig: Record<'height' | 'width', number | '-'>): string {
-    const {width, height} = imageConfig;
-
-    return apiUrl.imageGet.replace(':size', `${String(width)}x${String(height)}`).replace(':fileName', uniqueFileName);
-}
-
 export function makeSlugValidator(data: MakeSlugValidatorArgumentType): Array<Rule> {
     const {id, mode, savedArticleList} = data;
 
@@ -215,10 +205,6 @@ export function getArticleLinkToEdit(articleId: string): string {
     return generatePath<typeof appRoute.articleEdit.path>(appRoute.articleEdit.path, {articleId});
 }
 
-export function getClientArticleLinkWithDomain(slug: string): string {
-    return httpsSiteDomain + getArticleLinkToViewClient(slug);
-}
-
 export function getFileExtension(fileName: string): string {
     const hasExtension = fileName.includes('.');
 
@@ -267,41 +253,6 @@ export async function getFileMarkdownByName(fileName: string): Promise<string> {
     return `<a href="${pathToFile}" target="_blank" download="${fileName}">${fileName}</a>`;
 }
 */
-
-// eslint-disable-next-line complexity
-export function getFileMarkdownByFullInfo(
-    fullFileInfo: ArticleFileType,
-    additionalInfo: Record<'alt', string>
-): string {
-    const {duration, name, width, height, type, title} = fullFileInfo;
-    const {alt} = additionalInfo;
-    const pathToFile = getPathToFile(name);
-
-    const htmlTitle = title || 'THE TITLE';
-    const htmlAlt = alt || title;
-
-    switch (type) {
-        case ArticleFileTypeEnum.image: {
-            return `![${htmlAlt}](${pathToFile} "${htmlTitle}" height="${height}" width="${width}")`;
-        }
-        case ArticleFileTypeEnum.audio: {
-            return `<audio data-duration="${duration}" data-title="${title}" src="${pathToFile}"></audio>`;
-        }
-        case ArticleFileTypeEnum.video: {
-            // eslint-disable-next-line max-len
-            return `<video width="${width}" height="${height}" data-duration="${duration}" data-title="${title}" src="${pathToFile}" type="video/mp4" controls></video>`;
-        }
-        case ArticleFileTypeEnum.unknown: {
-            return `<a href="${pathToFile}" target="_blank" download="${textToSlug(title)}">${name}</a>`;
-        }
-        default: {
-            throw new NeverError(type);
-        }
-    }
-
-    // eslint-disable-next-line no-unreachable
-    return `<a href="${pathToFile}" target="_blank" download="${name}">${name}</a>`;
-}
 
 export function getAbsentIdList(
     subDocumentIdList: Array<string>,

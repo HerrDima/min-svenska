@@ -3,7 +3,7 @@
 
 import {ArticlePreviewType, ArticleType} from '../../../article/article-type';
 import {SsrReplaceDataType} from '../ssr-helper/ssr-helper-type';
-import {getClientArticleLinkWithDomain} from '../../../../www/page/cms/cms-article/cms-article-helper';
+import {getClientArticleLinkWithDomain} from '../../../../www/client-component/article/article-helper';
 
 import {removeNonJsonSymbols} from './schema-markup-helper';
 

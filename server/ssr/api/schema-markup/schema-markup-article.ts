@@ -3,9 +3,10 @@
 
 import {ArticleType} from '../../../article/article-type';
 import {SsrReplaceDataType} from '../ssr-helper/ssr-helper-type';
-import {getClientArticleLinkWithDomain, getPathToImage} from '../../../../www/page/cms/cms-article/cms-article-helper';
+import {getPathToImage} from '../../../../www/util/path';
 import {companyLogoPngFileName, copyrightName, httpsSiteDomain} from '../../../../www/const';
 import {ArticleImageDataType, getImageListFromArticle} from '../../../sitemap/sitemap-img-xml';
+import {getClientArticleLinkWithDomain} from '../../../../www/client-component/article/article-helper';
 
 import {fitTextTo, removeNonJsonSymbols, timeTo0000} from './schema-markup-helper';
 

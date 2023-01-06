@@ -1,6 +1,6 @@
 import {ScreenWidthNameEnum, getScreenName} from 'react-system-hook';
 
-import {getPathToImage} from '../../page/cms/cms-article/cms-article-helper';
+import {getPathToImage} from '../../util/path';
 
 // max website width is 1200
 const screenWidthList: Array<number> = [1200, 1024, 912, 820, 768, 540, 425, 390, 375, 320, 280, 128];

@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom';
 
 import {ArticlePreviewType, SubDocumentListViewTypeEnum} from '../../../../server/article/article-type';
 import {getArticleLinkToViewClient} from '../../article/article-helper';
-import {getPathToImage} from '../../../page/cms/cms-article/cms-article-helper';
+import {getPathToImage} from '../../../util/path';
 
 import articlePreviewListStyle from './article-preview.scss';
 

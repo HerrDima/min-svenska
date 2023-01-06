@@ -1,6 +1,6 @@
 import {ArticleType} from '../../../article/article-type';
 
-import {getClientArticleLinkWithDomain} from '../../../../www/page/cms/cms-article/cms-article-helper';
+import {getClientArticleLinkWithDomain} from '../../../../www/client-component/article/article-helper';
 
 import {SsrReplaceDataType} from './ssr-helper-type';
 

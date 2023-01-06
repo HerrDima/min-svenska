@@ -1,6 +1,6 @@
 import {ArticleType} from '../../../article/article-type';
 import {httpsSiteDomain} from '../../../../www/const';
-import {getPathToImage} from '../../../../www/page/cms/cms-article/cms-article-helper';
+import {getPathToImage} from '../../../../www/util/path';
 
 import {SsrReplaceDataType} from './ssr-helper-type';
 

@@ -7,7 +7,7 @@ import {getArticleLinkToViewClient} from '../www/client-component/article/articl
 import {generatePath, paginationQueryToURLSearchParameters} from '../www/util/url';
 import {appRoute} from '../www/component/app/app-route';
 import {appIconPngFileName, companyLogoPngFileName} from '../www/const';
-import {getPathToImage} from '../www/page/cms/cms-article/cms-article-helper';
+import {getPathToImage} from '../www/util/path';
 import {articlePreviewKeyList} from '../www/client-component/search/search-const';
 
 import {articleCrud} from './article/article';

@@ -1,6 +1,6 @@
 import {ArticleType, ArticleTypeEnum} from '../article/article-type';
 import {rootArticleSlug} from '../article/article-const';
-import {getClientArticleLinkWithDomain} from '../../www/page/cms/cms-article/cms-article-helper';
+import {getClientArticleLinkWithDomain} from '../../www/client-component/article/article-helper';
 
 function getLastmodTagContent(article: ArticleType): string {
     const {updatedDate} = article;

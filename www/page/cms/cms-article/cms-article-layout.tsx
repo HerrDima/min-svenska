@@ -5,9 +5,10 @@ import {Link} from 'react-router-dom';
 
 import {ArticleFileType, ArticleType} from '../../../../server/article/article-type';
 import {getArticleLinkToViewClient} from '../../../client-component/article/article-helper';
+import {getPathToImage, getPathToFile} from '../../../util/path';
 
 import {ArticleForValidationType} from './cms-article-type';
-import {getArticleLinkToEdit, getIsImage, getPathToFile, getPathToImage} from './cms-article-helper';
+import {getArticleLinkToEdit, getIsImage} from './cms-article-helper';
 
 const {Option} = Select;
 const {Text} = Typography;

@@ -3,11 +3,12 @@ import {useContext} from 'react';
 import {ArticleContextType} from '../article-context/article-context-type';
 import {articleContext} from '../article-context/article-context';
 import {Markdown} from '../../../layout/markdown/markdown';
-import {getFileMarkdownByFullInfo, getPathToFile} from '../../../page/cms/cms-article/cms-article-helper';
+import {getFileMarkdownByFullInfo} from '../../../layout/markdown/markdown-helper';
 import {ArticleFileType, ArticleFileTypeEnum} from '../../../../server/article/article-type';
 import {AudioAsync} from '../../../layout/audio-player/audio-player';
 import {defaultMediaMetadata} from '../../../layout/audio-player/audio-player-const';
 import articleStyle from '../article.scss';
+import {getPathToFile} from '../../../util/path';
 
 export function ArticleAudioSingle(): JSX.Element {
     const {article} = useContext<ArticleContextType>(articleContext);

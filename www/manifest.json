@@ -1,8 +1,8 @@
 {
-    "name": "Min Svenska",
+    "name": "My Best Site",
     "lang": "en-US",
     "display": "standalone",
-    "short_name": "Min Svenska",
+    "short_name": "My Best Site",
     "start_url": "/",
     "scope": "/",
     "background_color": "#f0ece3",

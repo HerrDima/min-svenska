@@ -7,7 +7,7 @@ const {Title} = Typography;
 import {ArticleFileType} from '../../../../server/article/article-type';
 import {Box} from '../../../layout/box/box';
 
-import {getFileMarkdownByFullInfo} from './cms-article-helper';
+import {getFileMarkdownByFullInfo} from '../../../layout/markdown/markdown-helper';
 
 type UploadedFileListItemPropsType = {
     file: UploadFile<unknown>;

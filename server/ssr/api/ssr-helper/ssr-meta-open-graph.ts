@@ -1,6 +1,7 @@
 import {ArticleType} from '../../../article/article-type';
-import {getClientArticleLinkWithDomain, getPathToImage} from '../../../../www/page/cms/cms-article/cms-article-helper';
+import {getPathToImage} from '../../../../www/util/path';
 import {httpsSiteDomain, openGraphLocaleName} from '../../../../www/const';
+import {getClientArticleLinkWithDomain} from '../../../../www/client-component/article/article-helper';
 
 import {SsrReplaceDataType} from './ssr-helper-type';
 

@@ -5,11 +5,12 @@ import {ColumnType} from 'antd/es/table/interface';
 import {SearchOutlined} from '@ant-design/icons';
 import {Link} from 'react-router-dom';
 
-import {getPathToImage, getArticleLinkToEdit} from '../cms-article/cms-article-helper';
+import {getArticleLinkToEdit} from '../cms-article/cms-article-helper';
 import {getTickCross} from '../../../util/string';
 import {dateIsoToHumanView} from '../../../util/time';
 import {getArticleLinkToViewClient} from '../../../client-component/article/article-helper';
 import {ArticleFileType} from '../../../../server/article/article-type';
+import {getPathToImage} from '../../../util/path';
 
 import {
     ArticleForTableListKeysType,

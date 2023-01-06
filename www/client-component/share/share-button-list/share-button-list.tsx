@@ -3,7 +3,7 @@ import {useContext} from 'react';
 import {ArticleContextType} from '../../article/article-context/article-context-type';
 import {articleContext} from '../../article/article-context/article-context';
 import {Locale} from '../../../provider/locale/locale-context';
-import {getClientArticleLinkWithDomain} from '../../../page/cms/cms-article/cms-article-helper';
+import {getClientArticleLinkWithDomain} from '../../article/article-helper';
 
 import {ShareButtonListContent} from './share-button-list-content/share-button-list-content';
 

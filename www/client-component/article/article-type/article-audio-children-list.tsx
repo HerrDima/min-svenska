@@ -5,12 +5,13 @@ import {Link} from 'react-router-dom';
 import {ArticleContextType} from '../article-context/article-context-type';
 import {articleContext} from '../article-context/article-context';
 import {Markdown} from '../../../layout/markdown/markdown';
-import {getFileMarkdownByFullInfo, getPathToFile} from '../../../page/cms/cms-article/cms-article-helper';
+import {getFileMarkdownByFullInfo} from '../../../layout/markdown/markdown-helper';
 import {ArticleFileType, ArticleFileTypeEnum, ArticlePreviewType} from '../../../../server/article/article-type';
 import {getArticleLinkToViewClient} from '../article-helper';
 import {AudioPlayerAsync} from '../../../layout/audio-player/audio-player';
 import {defaultMediaMetadata} from '../../../layout/audio-player/audio-player-const';
 import audioPlayerStyle from '../../../layout/audio-player/audio-player.scss';
+import {getPathToFile} from '../../../util/path';
 import articleStyle from '../article.scss';
 
 export function ArticleAudioChildrenList(): JSX.Element {
