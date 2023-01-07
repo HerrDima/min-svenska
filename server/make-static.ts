@@ -45,7 +45,7 @@ async function getStaticPage(slug: string): Promise<StaticPageType> {
     return {html, slug};
 }
 
-async function copyFrontFolder(): Promise<void> {
+async function copyDistributionFolder(): Promise<void> {
     await makeDirectory(cwd, staticSiteFolderName);
 
     await fileSystem.cp(path.join(cwd, 'dist'), path.join(cwd, staticSiteFolderName), {recursive: true});
@@ -270,13 +270,13 @@ export async function makeStatic() {
     await makeImages(pageList);
     console.log('>> [makeStatic]: makeImages: end');
 
+    console.log('>> [makeStatic]: copyDistFolder: begin');
+    await copyDistributionFolder();
+    console.log('>> [makeStatic]: copyDistFolder: end');
+
     console.log('>> [makeStatic]: makeIndexHtml: begin');
     await makeIndexHtml(pageList);
     console.log('>> [makeStatic]: makeIndexHtml: end');
-
-    console.log('>> [makeStatic]: copyFrontFolder: begin');
-    await copyFrontFolder();
-    console.log('>> [makeStatic]: copyFrontFolder: end');
 
     console.log('> [makeStatic]: makeStatic: end');
 }
