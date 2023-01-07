@@ -9,6 +9,10 @@ export const svSe: LocaleDictionaryType = {
 
     NAVIGATION__HOME: 'Hem',
 
+    SHARE__RECOMMEND_TO_FRIENDS__HEADER: 'Rekommendera till vänner:',
+    SHARE__HEADER: 'Dela med sig:',
+    SEE_ALSO__HEADER: 'Se även:',
+
     /* eslint-enable id-match, id-length, max-len,sonarjs/no-duplicate-string, sort-keys */
 };
 
