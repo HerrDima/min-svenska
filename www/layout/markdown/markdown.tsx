@@ -20,7 +20,7 @@ export function Markdown(props: PropsType): JSX.Element {
     const {mdFontSize} = useContext<ThemeContextType>(ThemeContext);
     const {mdInput, articleTitle, ...divAttributes} = props;
     const {className} = divAttributes;
-    const htmlCodeClean = markdown(mdInput, {useWrapper: false});
+    const htmlCodeClean = markdown(mdInput, {useLineBreak: true, useWrapper: false});
     const htmlCodeImage = markdownImage(htmlCodeClean);
     const htmlCodeListAudio = markdownAudio(htmlCodeImage, articleTitle);
     const fullClassName = classNames(markdownStyle.markdown, defaultMarkdownConfig.wrapperClassName, className);
