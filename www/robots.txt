@@ -1,6 +1,6 @@
 User-agent: *
 Disallow: /cms
 
-Host: https://my-best-site.com
-Sitemap: https://my-best-site.com/sitemap.xml
-Sitemap: https://my-best-site.com/sitemap-img.xml
+Host: https://min-svenska.com
+Sitemap: https://min-svenska.com/sitemap.xml
+Sitemap: https://min-svenska.com/sitemap-img.xml

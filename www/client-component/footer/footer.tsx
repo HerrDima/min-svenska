@@ -1,6 +1,6 @@
-import {Link} from 'react-router-dom';
+// import {Link} from 'react-router-dom';
 
-import {getArticleLinkToViewClient} from '../article/article-helper';
+// import {getArticleLinkToViewClient} from '../article/article-helper';
 import {copyrightName} from '../../const';
 
 import footerStyle from './footer.scss';
@@ -11,6 +11,7 @@ export function Footer(): JSX.Element {
             <p className={footerStyle.footer_copyright}>
                 &copy;&nbsp;{copyrightName}&nbsp;{new Date().getFullYear()}.
             </p>
+            {/*
             <Link className={footerStyle.footer_link} to={getArticleLinkToViewClient('header-1')}>
                 header 1
             </Link>
@@ -20,6 +21,7 @@ export function Footer(): JSX.Element {
             <Link className={footerStyle.footer_link} to={getArticleLinkToViewClient('header-3')}>
                 header 3
             </Link>
+*/}
         </footer>
     );
 }
