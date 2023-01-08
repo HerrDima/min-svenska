@@ -36,7 +36,7 @@ export function GdprInfo(): JSX.Element | null {
                         rel="noreferrer"
                         target="_blank"
                     >
-                        <Locale stringKey="UI__LEARN_MORE" />
+                        <Locale stringKey="GDPR__WHAT_ARE_COOKIES" />
                     </a>
                 </p>
 

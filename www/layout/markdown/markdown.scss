@@ -8,4 +8,10 @@
         margin-left: auto;
         margin-right: auto;
     }
+
+    :global {
+        .md-pro {
+            background-color: transparent;
+        }
+    }
 }

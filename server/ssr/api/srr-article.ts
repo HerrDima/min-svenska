@@ -10,6 +10,8 @@ import {
 import {ArticlePreviewType, ArticleType} from '../../article/article-type';
 import {articleSsrFieldName} from '../../../www/client-component/article/article-const';
 
+import {replaceSpecialSymbols} from './ssr-helper/ssr-symbol';
+
 export async function makeClientArticleContextData(slug: string): Promise<[ArticleContextType, string]> {
     const article: ArticleType = await getActiveArticleBySlugEnsure(slug, makeDefaultArticle());
 
@@ -31,7 +33,7 @@ export async function makeClientArticleContextData(slug: string): Promise<[Artic
 
     const articleDataHtmlString: string = [
         '<script>',
-        `window.${articleSsrFieldName} = '${encodeURIComponent(JSON.stringify(articleData))}'`,
+        `window.${articleSsrFieldName} = '${replaceSpecialSymbols(encodeURIComponent(JSON.stringify(articleData)))}'`,
         '</script>',
     ].join('');
 

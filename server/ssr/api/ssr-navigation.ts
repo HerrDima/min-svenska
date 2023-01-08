@@ -9,6 +9,8 @@ import {
 import {rootArticleId} from '../../article/article-const';
 import {ArticlePreviewType} from '../../article/article-type';
 
+import {replaceSpecialSymbols} from './ssr-helper/ssr-symbol';
+
 export async function getNavigationContextData(): Promise<[NavigationContextType, string]> {
     const articleList = await getSubDocumentListByParentIdFiltered(rootArticleId);
 
@@ -20,7 +22,9 @@ export async function getNavigationContextData(): Promise<[NavigationContextType
 
     const navigationDataHtmlString: string = [
         '<script>',
-        `window.${navigationSsrFieldName} = '${encodeURIComponent(JSON.stringify(navigationData))}'`,
+        `window.${navigationSsrFieldName} = '${replaceSpecialSymbols(
+            encodeURIComponent(JSON.stringify(navigationData))
+        )}'`,
         '</script>',
     ].join('');
 

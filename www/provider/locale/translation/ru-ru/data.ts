@@ -61,6 +61,7 @@ export const ruRu: LocaleDictionaryType = {
     EMPTY__EMPTY: 'Пусто.',
 
     GDPR__WE_USE_COOKIES: 'Пользуясь настоящим веб-сайтом, вы даёте свое согласие на использование файлов cookies.',
+    GDPR__WHAT_ARE_COOKIES: 'Что такое файлы cookie?',
 
     ERROR__CAN_NOT_LOAD_THE_COMPONENT: 'Не получилось загрузить компонент.',
 

@@ -59,6 +59,7 @@ export const enUs = {
     EMPTY__EMPTY: 'Empty.',
 
     GDPR__WE_USE_COOKIES: 'By using this website, you consent to the use of cookies.',
+    GDPR__WHAT_ARE_COOKIES: 'What are cookies?',
 
     ERROR__CAN_NOT_LOAD_THE_COMPONENT: 'Can not load the component.',
 

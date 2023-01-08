@@ -1,7 +1,7 @@
 /* global HTMLDivElement */
 
 import {HTMLAttributes, useContext} from 'react';
-import {markdown, defaultMarkdownConfig} from 'markdown-pro';
+import {markdown, classNameMdPro, classNameMdProThemeLight} from 'markdown-pro';
 
 import {classNames} from '../../util/css';
 import {ThemeContextType} from '../../provider/theme/theme-context-type';
@@ -23,7 +23,7 @@ export function Markdown(props: PropsType): JSX.Element {
     const htmlCodeClean = markdown(mdInput, {useLineBreak: true, useWrapper: false});
     const htmlCodeImage = markdownImage(htmlCodeClean);
     const htmlCodeListAudio = markdownAudio(htmlCodeImage, articleTitle);
-    const fullClassName = classNames(markdownStyle.markdown, defaultMarkdownConfig.wrapperClassName, className);
+    const fullClassName = classNames(markdownStyle.markdown, classNameMdPro, classNameMdProThemeLight, className);
 
     return (
         <div
