@@ -9,11 +9,11 @@ export function getMetaTwitterCardSsrReplaceData(article: ArticleType): SsrRepla
     const selector = '<meta data-ssr="twitter-card"/>';
 
     const value = [
-        '<meta property="twitter:card" content="summary_large_image"/>',
-        `<meta property="twitter:title" content="${title}"/>`,
-        `<meta property="twitter:description" content="${descriptionShort}"/>`,
-        `<meta property="twitter:image" content="${
-            httpsSiteDomain + getPathToImage(titleImage.name, {height: 1024, width: 1024})
+        '<meta name="twitter:card" content="summary_large_image"/>',
+        `<meta name="twitter:title" content="${title}"/>`,
+        `<meta name="twitter:description" content="${descriptionShort}"/>`,
+        `<meta name="twitter:image" content="${
+            httpsSiteDomain + getPathToImage(titleImage.name, {height: '-', width: 1024})
         }"/>`,
     ].join('');
 
