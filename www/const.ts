@@ -12,7 +12,7 @@ export const googleAdSenseId = 'ca-pub-8997870404482178';
 export const googleAdSenseBottomAdId = '9673664092';
 export const googleAdSenseTopAdId = '4086736743';
 
-export const siteDomain = 'min-svenska.com';
+export const siteDomain = 'herrdima.github.io';
 export const httpsSiteDomain = `https://${siteDomain}`;
 export const openGraphLocaleName = 'sv_SE';
 export const copyrightName = 'Min Svenska';
