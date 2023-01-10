@@ -38,12 +38,21 @@ export function ClientArticle(): JSX.Element {
         <Page>
             <Breadcrumbs />
             <PageHeader>{title}</PageHeader>
-            <TopAdsWrapper />
+
+            <IsRender isRender={false}>
+                <TopAdsWrapper />
+            </IsRender>
+
             <Article />
+
             <IsRender isRender={false}>
                 <Siblings />
             </IsRender>
-            <BottomAdsWrapper />
+
+            <IsRender isRender={false}>
+                <BottomAdsWrapper />
+            </IsRender>
+
             <ShareButtonList />
         </Page>
     );
