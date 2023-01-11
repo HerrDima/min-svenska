@@ -10,6 +10,7 @@ import {ThemeContext} from '../../provider/theme/theme-context';
 import {markdownImage} from './markdown-helper-image';
 import {markdownAudio} from './markdown-helper-audio';
 import markdownStyle from './markdown.scss';
+import {markdownVideo} from './markdown-helper-video';
 
 type PropsType = HTMLAttributes<HTMLDivElement> & {
     articleTitle: string;
@@ -22,7 +23,8 @@ export function Markdown(props: PropsType): JSX.Element {
     const {className} = divAttributes;
     const htmlCodeClean = markdown(mdInput, {useLineBreak: true, useWrapper: false});
     const htmlCodeImage = markdownImage(htmlCodeClean);
-    const htmlCodeListAudio = markdownAudio(htmlCodeImage, articleTitle);
+    const htmlCodeVideo = markdownVideo(htmlCodeImage);
+    const htmlCodeListAudio = markdownAudio(htmlCodeVideo, articleTitle);
     const fullClassName = classNames(markdownStyle.markdown, classNameMdPro, classNameMdProThemeLight, className);
 
     return (

@@ -22,7 +22,7 @@ export function ArticleAudioSingle(): JSX.Element {
             <Markdown
                 articleTitle={title}
                 className={articleStyle.article_markdown}
-                mdInput={getFileMarkdownByFullInfo(titleImage, {alt: title})}
+                mdInput={getFileMarkdownByFullInfo(titleImage, {alt: title, poster: ''})}
             />
             {firstAudioFile ? (
                 <AudioAsync

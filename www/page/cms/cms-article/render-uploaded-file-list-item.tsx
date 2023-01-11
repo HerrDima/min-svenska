@@ -43,7 +43,7 @@ export function renderUploadedFileListItem(props: UploadedFileListItemPropsType)
                     />
                 </Col>
                 <Col span={12}>
-                    <Input readOnly value={getFileMarkdownByFullInfo(fileInfo, {alt: ''})} />
+                    <Input readOnly value={getFileMarkdownByFullInfo(fileInfo, {alt: '', poster: ''})} />
                 </Col>
             </Row>
         </Box>

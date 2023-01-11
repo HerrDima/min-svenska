@@ -64,17 +64,16 @@ function adaptiveImage(imageHtmlCode: string): string {
     const [ignoredFullWidthString, widthAsString = ''] = imageHtmlCode.match(/width="(\d+)"/) || ['', '0'];
     const [ignoredFullHeightString, heightAsString = ''] = imageHtmlCode.match(/height="(\d+)"/) || ['', '0'];
     const [ignoredFullSrcString, srcAsString = ''] = imageHtmlCode.match(/src="(\S+)"/) || ['', ''];
-    const fileName = srcAsString.split('/').pop() || '';
     const originalWidth = Number.parseInt(widthAsString, 10);
     const originalHeight = Number.parseInt(heightAsString, 10);
 
-    if (!originalWidth || !originalHeight || !srcAsString || !fileName) {
+    if (!originalWidth || !originalHeight || !srcAsString) {
         return imageHtmlCode;
     }
 
     const sourceTagList: Array<string> = screenWidthList.map<string>((mediaWidth: number): string => {
         return makeSourceTag({
-            fileName,
+            fileName: srcAsString,
             mediaWidth,
             originalHeight,
             originalWidth,

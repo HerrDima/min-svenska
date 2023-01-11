@@ -3,12 +3,13 @@ import {Fragment} from 'react';
 import {AudioAsync} from '../audio-player/audio-player';
 import {defaultMediaMetadata} from '../audio-player/audio-player-const';
 import {textToSlug} from '../../util/human';
+import {getPathToFile} from '../../util/path';
 
 export const markdownAudioRegExp = /<audio[\S\s]+?<\/audio>/gi;
 
 export type AudioTagDataType = {
     duration: number;
-    src: string;
+    fileName: string;
     title: string;
 };
 
@@ -20,13 +21,13 @@ export function parseAudioTag(audioTag: string): AudioTagDataType {
 
     return {
         duration: durationAsNumber,
-        src: srcAsString,
+        fileName: srcAsString,
         title: titleAsString,
     };
 }
 
 function getAudioFromHtml(audioHtmlCode: string, title: string): JSX.Element {
-    const {duration, src, title: parsedTitle} = parseAudioTag(audioHtmlCode);
+    const {duration, fileName, title: parsedTitle} = parseAudioTag(audioHtmlCode);
 
     const endTitle: string = parsedTitle || title;
     const downloadFileName = textToSlug(endTitle);
@@ -37,7 +38,7 @@ function getAudioFromHtml(audioHtmlCode: string, title: string): JSX.Element {
             duration={duration}
             mediaMetadata={{...defaultMediaMetadata, title: endTitle}}
             preload={duration ? 'none' : 'metadata'}
-            src={src}
+            src={getPathToFile(fileName)}
             useRepeatButton
         />
     );

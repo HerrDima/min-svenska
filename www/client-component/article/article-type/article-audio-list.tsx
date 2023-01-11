@@ -8,6 +8,7 @@ import {markdownAudioRegExp, parseAudioTag} from '../../../layout/markdown/markd
 import {AudioPlayerAsync} from '../../../layout/audio-player/audio-player';
 import {defaultMediaMetadata} from '../../../layout/audio-player/audio-player-const';
 import articleStyle from '../article.scss';
+import {getPathToFile} from '../../../util/path';
 
 export function ArticleAudioList(): JSX.Element {
     const {article} = useContext<ArticleContextType>(articleContext);
@@ -17,14 +18,14 @@ export function ArticleAudioList(): JSX.Element {
     const audioList: Array<string> = content.match(markdownAudioRegExp) || [];
 
     const trackList: Array<TrackType> = audioList.map<TrackType>((audioTag: string): TrackType => {
-        const {duration, title: trackTitle, src} = parseAudioTag(audioTag);
+        const {duration, title: trackTitle, fileName} = parseAudioTag(audioTag);
 
         return {
             content: trackTitle,
             duration,
             mediaMetadata: defaultMediaMetadata,
             preload: duration ? 'none' : 'metadata',
-            src,
+            src: getPathToFile(fileName),
         };
     });
 
