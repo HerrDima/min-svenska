@@ -9,8 +9,9 @@ import {ThemeContext} from '../../provider/theme/theme-context';
 
 import {markdownImage} from './markdown-helper-image';
 import {markdownAudio} from './markdown-helper-audio';
-import markdownStyle from './markdown.scss';
 import {markdownVideo} from './markdown-helper-video';
+
+import markdownStyle from './markdown.scss';
 
 type PropsType = HTMLAttributes<HTMLDivElement> & {
     articleTitle: string;

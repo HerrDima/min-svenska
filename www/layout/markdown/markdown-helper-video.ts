@@ -1,6 +1,8 @@
 import {getPathToFile, getPathToImage} from '../../util/path';
 import {appIconPngFileName} from '../../const';
 
+import markdownStyle from './markdown.scss';
+
 // eslint-disable-next-line complexity
 function adaptiveVideo(videoHtmlCode: string): string {
     const [ignoredFullWidthString, widthAsString = ''] = videoHtmlCode.match(/width="(\d+)"/) || ['', '0'];
@@ -16,7 +18,6 @@ function adaptiveVideo(videoHtmlCode: string): string {
     const [ignoredFullTitleString, titleAsString = ''] = videoHtmlCode.match(/title="(\S+)"/) || ['', 'THE TITLE'];
     const [ignoredFullSrcString, srcAsString = ''] = videoHtmlCode.match(/src="(\S+)"/) || ['', ''];
     const preload = 'none';
-    const type = 'video/mp4';
     const controls = 'controls';
     const originalWidth = Number.parseInt(widthAsString, 10);
     const originalHeight = Number.parseInt(heightAsString, 10);
@@ -25,15 +26,19 @@ function adaptiveVideo(videoHtmlCode: string): string {
         return videoHtmlCode;
     }
 
+    const poster = getPathToImage(posterAsString, {height: '-', width: originalWidth});
+
     const attributeList: Array<string> = [
         `controls="${controls}"`,
         `data-duration="${durationAsString}"`,
         `height="${originalHeight}"`,
         `width="${originalWidth}"`,
         `src="${getPathToFile(srcAsString)}"`,
-        `poster="${getPathToImage(posterAsString, {height: '-', width: originalWidth})}"`,
+        `poster="${poster}"`,
         `preload="${preload}"`,
-        `type="${type}"`,
+        `title="${titleAsString}"`,
+        `class="${markdownStyle.markdown_video}"`,
+        `style="background-image: linear-gradient(#888a, #888a), url(${poster})"`,
     ];
 
     return `<video ${attributeList.join(' ')}></video>`;

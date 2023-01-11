@@ -1,6 +1,8 @@
 import {ScreenWidthNameEnum, getScreenName} from 'react-system-hook';
 
-import {getPathToImage} from '../../util/path';
+import {getPathToFile, getPathToImage} from '../../util/path';
+
+import markdownStyle from './markdown.scss';
 
 // max website width is 1200
 const screenWidthList: Array<number> = [1200, 1024, 912, 820, 768, 540, 425, 390, 375, 320, 280, 128];
@@ -80,7 +82,13 @@ function adaptiveImage(imageHtmlCode: string): string {
         });
     });
 
-    return `<picture>${sourceTagList.join('')}${imageHtmlCode}</picture>`;
+    const imageWithClassName = imageHtmlCode
+        .replace(/<img /, `<img class="${markdownStyle.markdown_image}" `)
+        .replace(/src="(\S+)"/, `src="${getPathToFile(srcAsString)}"`);
+
+    const sourceTagListJoined = sourceTagList.join('');
+
+    return `<picture class="${markdownStyle.markdown_picture}">${sourceTagListJoined}${imageWithClassName}</picture>`;
 }
 
 export function markdownImage(htmlCode: string): string {

@@ -4,15 +4,27 @@
 .markdown {
     background-color: transparent;
 
-    img,
-    video {
+    .markdown_picture {
         display: block;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 0 0.5em;
+    }
+
+    .markdown_image {
+        display: block;
+        margin: 0 auto;
         max-width: 100%;
     }
 
-    video[poster] {
-        object-fit: cover;
+    .markdown_video {
+        background-color: #888a;
+        background-position: center center, center center;
+        background-size: cover, cover;
+        display: block;
+        margin: 0 auto 0.5em;
+        max-width: 100%;
+
+        &[poster] {
+            object-fit: contain;
+        }
     }
 }
