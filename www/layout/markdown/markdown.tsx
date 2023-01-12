@@ -7,9 +7,7 @@ import {classNames} from '../../util/css';
 import {ThemeContextType} from '../../provider/theme/theme-context-type';
 import {ThemeContext} from '../../provider/theme/theme-context';
 
-import {markdownImage} from './markdown-helper-image';
-import {markdownAudio} from './markdown-helper-audio';
-import {markdownVideo} from './markdown-helper-video';
+import {MarkdownHtmlToReact} from './markdown-html-to-react';
 
 import markdownStyle from './markdown.scss';
 
@@ -23,9 +21,6 @@ export function Markdown(props: PropsType): JSX.Element {
     const {mdInput, articleTitle, ...divAttributes} = props;
     const {className} = divAttributes;
     const htmlCodeClean = markdown(mdInput, {useLineBreak: true, useWrapper: false});
-    const htmlCodeImage = markdownImage(htmlCodeClean);
-    const htmlCodeVideo = markdownVideo(htmlCodeImage);
-    const htmlCodeListAudio = markdownAudio(htmlCodeVideo, articleTitle);
     const fullClassName = classNames(markdownStyle.markdown, classNameMdPro, classNameMdProThemeLight, className);
 
     return (
@@ -35,7 +30,7 @@ export function Markdown(props: PropsType): JSX.Element {
             className={fullClassName}
             style={{fontSize: `${mdFontSize}px`}}
         >
-            {htmlCodeListAudio}
+            <MarkdownHtmlToReact articleTitle={articleTitle} htmlCode={htmlCodeClean} />
         </div>
     );
 }

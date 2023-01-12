@@ -1,6 +1,3 @@
-/* stylelint-disable selector-max-compound-selectors */
-/* stylelint-disable selector-no-qualifying-type */
-
 .markdown {
     background-color: transparent;
 
@@ -15,16 +12,11 @@
         max-width: 100%;
     }
 
-    .markdown_video {
-        background-color: #888a;
-        background-position: center center, center center;
-        background-size: cover, cover;
-        display: block;
+    .markdown_audio {
         margin: 0 auto 0.5em;
-        max-width: 100%;
+    }
 
-        &[poster] {
-            object-fit: contain;
-        }
+    .markdown_video {
+        margin: 0 auto 0.5em;
     }
 }

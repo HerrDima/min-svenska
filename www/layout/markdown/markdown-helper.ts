@@ -21,11 +21,11 @@ export function getFileMarkdownByFullInfo(
             return `![${htmlAlt}](${name} "${htmlTitle}" height="${height}" width="${width}")`;
         }
         case ArticleFileTypeEnum.audio: {
-            return `<audio data-duration="${duration}" data-title="${title}" src="${name}"></audio>`;
+            return `<audio data-duration="${duration}" data-title="${title}" src="${name}"/>`;
         }
         case ArticleFileTypeEnum.video: {
             // eslint-disable-next-line max-len
-            return `<video width="${width}" height="${height}" poster="${htmlPoster}" data-duration="${duration}" title="${title}" src="${name}"></video>`;
+            return `<video width="${width}" height="${height}" poster="${htmlPoster}" data-duration="${duration}" title="${title}" src="${name}"/>`;
         }
         case ArticleFileTypeEnum.unknown: {
             return `<a href="${pathToFile}" target="_blank" download="${textToSlug(title)}">${name}</a>`;
@@ -37,4 +37,8 @@ export function getFileMarkdownByFullInfo(
 
     // eslint-disable-next-line no-unreachable
     return `<a href="${pathToFile}" target="_blank" download="${name}">${name}</a>`;
+}
+
+export function getIsEmptyHtml(htmlChunk: string): boolean {
+    return htmlChunk.replace(/<br\/>/gi, '').trim().length === 0;
 }

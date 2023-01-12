@@ -61,6 +61,13 @@ export function getDateTimeHumanSize(option: GetDateTimeDifferenceOptionType): s
         .join(' ');
 }
 
+export function secondsToHuman(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const restOfSeconds = Math.floor(seconds % 60);
+
+    return `${minutes}:${restOfSeconds}`;
+}
+
 export function dateIsoToHumanView(dateIso: string): string {
     return dateIso.replace('T', ' ').replace(/\.\S+/, '');
 }

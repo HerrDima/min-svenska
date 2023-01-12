@@ -1,0 +1,97 @@
+//$video-tag-z-index: 1;
+$video-tag-started-z-index: 5;
+$start-video-button-z-index: 4;
+$image-preview-z-index: 3;
+
+.video {
+    display: block;
+    margin: 0 auto;
+    position: relative;
+
+    .video__play_button {
+        background-color: rgb(0 0 0 / 50%);
+        border: 2px solid #fff;
+        border-radius: 100%;
+        box-shadow: 0 0 10px 2px rgb(0 0 0 / 40%);
+        box-sizing: border-box;
+        cursor: pointer;
+        display: block;
+        height: 66px;
+        left: 50%;
+        margin-left: -33px;
+        margin-top: -33px;
+        position: absolute;
+        top: 50%;
+        width: 66px;
+        z-index: $start-video-button-z-index;
+    }
+
+    .video__play_button__icon {
+        background-color: transparent;
+        border: 14px solid transparent;
+        border-left-color: #fff;
+        border-left-width: 25px;
+        border-right-width: 2px;
+        display: block;
+        height: 0;
+        margin-left: 16px;
+        width: 0;
+    }
+
+    .video__tag {
+        display: none;
+        height: 100%;
+        left: 0;
+        max-width: 100%;
+        position: absolute;
+        top: 0;
+        //z-index: $video-tag-z-index;
+    }
+
+    .video__tag__started {
+        display: block;
+        z-index: $video-tag-started-z-index;
+    }
+
+    .video__image,
+    .video__image_tag {
+        display: block;
+        height: 100%;
+        left: 0;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: $image-preview-z-index;
+    }
+
+    .video__title {
+        background-color: rgb(0 0 0 / 50%);
+        box-sizing: border-box;
+        color: #fff;
+        display: block;
+        font-size: 18px;
+        left: 0;
+        line-height: 1.4;
+        margin: 0;
+        padding: 12px 16px;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: $start-video-button-z-index;
+    }
+
+    .video__duration {
+        background-color: rgb(0 0 0 / 50%);
+        bottom: 0;
+        color: #fff;
+        display: block;
+        font-size: 16px;
+        left: 0;
+        line-height: 1.4;
+        margin: 0;
+        padding: 8px 16px;
+        position: absolute;
+        z-index: $start-video-button-z-index;
+    }
+}
