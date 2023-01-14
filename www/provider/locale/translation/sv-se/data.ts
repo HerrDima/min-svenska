@@ -7,6 +7,8 @@ export const svSe: LocaleDictionaryType = {
     /* eslint-disable id-match, id-length, max-len, sonarjs/no-duplicate-string, sort-keys */
     META__LANGUAGE_NAME: 'Svanska',
 
+    UI__SEARCH_PLACEHOLDER: 'Sök...',
+
     NAVIGATION__HOME: 'Hem',
 
     GDPR__WE_USE_COOKIES: 'Genom att använda denna webbplats samtycker du till användningen av cookies.',
@@ -15,6 +17,9 @@ export const svSe: LocaleDictionaryType = {
     SHARE__RECOMMEND_TO_FRIENDS__HEADER: 'Rekommendera till vänner:',
     SHARE__HEADER: 'Dela med sig:',
     SEE_ALSO__HEADER: 'Se även:',
+
+    SEARCH__REQUEST_TOO_SHORT: 'Förfrågan är för kort',
+    SEARCH__NOTHING_FOUND: 'Inget hittat',
 
     /* eslint-enable id-match, id-length, max-len,sonarjs/no-duplicate-string, sort-keys */
 };
