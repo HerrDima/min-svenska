@@ -18,15 +18,16 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    padding: 8px 8px 8px 0;
+    padding: 9px 8px 4px 0;
     text-decoration: none;
 }
 
 .header__home_icon {
     display: block;
-    height: 24px;
-    margin-right: 8px;
-    width: 24px;
+    flex-shrink: 0;
+    height: 30px;
+    margin-right: 4px;
+    width: 31px;
 }
 
 .header__home_text {
@@ -35,7 +36,9 @@
     color: $main-font-color;
     display: block;
     font-family: $main-font-family;
-    font-size: 22px;
+    font-size: 27px;
+    line-height: 27px;
+    padding-top: 8px;
 }
 
 .header__search {
