@@ -1,4 +1,4 @@
-import {AudioPlayerControlSpriteAsync, AudioAsync} from '../../layout/audio-player/audio-player';
+import {AudioPlayerControlSprite, Audio} from 'react-audio-player-pro';
 
 import {demoUrl} from '../../const';
 import {Markdown} from '../../layout/markdown/markdown';
@@ -31,9 +31,9 @@ export function ExampleAudio(): JSX.Element {
         <div className="example-wrapper">
             <Markdown articleTitle="" mdInput={exampleAudio} />
 
-            <AudioAsync mediaMetadata={singleAudioData.mediaMetadata} src={singleAudioData.src} useRepeatButton />
+            <Audio mediaMetadata={singleAudioData.mediaMetadata} src={singleAudioData.src} useRepeatButton />
 
-            <AudioPlayerControlSpriteAsync />
+            <AudioPlayerControlSprite />
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {TrackType} from 'react-audio-player-pro';
+import {TrackType, AudioPlayer} from 'react-audio-player-pro';
 import {Link} from 'react-router-dom';
 
 import {ArticleContextType} from '../article-context/article-context-type';
@@ -8,7 +8,6 @@ import {Markdown} from '../../../layout/markdown/markdown';
 import {getFileMarkdownByFullInfo} from '../../../layout/markdown/markdown-helper';
 import {ArticleFileType, ArticleFileTypeEnum, ArticlePreviewType} from '../../../../server/article/article-type';
 import {getArticleLinkToViewClient} from '../article-helper';
-import {AudioPlayerAsync} from '../../../layout/audio-player/audio-player';
 import {defaultMediaMetadata} from '../../../layout/audio-player/audio-player-const';
 import audioPlayerStyle from '../../../layout/audio-player/audio-player.scss';
 import {getPathToFile} from '../../../util/path';
@@ -54,7 +53,7 @@ export function ArticleAudioChildrenList(): JSX.Element {
                 className={articleStyle.article_markdown}
                 mdInput={getFileMarkdownByFullInfo(titleImage, {alt: title, poster: ''})}
             />
-            <AudioPlayerAsync className={articleStyle.article_audio_player} trackList={trackList} />
+            <AudioPlayer className={articleStyle.article_audio_player} trackList={trackList} />
             <Markdown articleTitle={title} className={articleStyle.article_markdown} mdInput={content} />
         </>
     );

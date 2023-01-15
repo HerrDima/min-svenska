@@ -1,4 +1,5 @@
-import {AudioAsync} from '../audio-player/audio-player';
+import {Audio} from 'react-audio-player-pro';
+
 import {defaultMediaMetadata} from '../audio-player/audio-player-const';
 import {textToSlug} from '../../util/human';
 import {getPathToFile} from '../../util/path';
@@ -33,7 +34,7 @@ export function getAudioFromHtml(audioHtmlCode: string, title: string): JSX.Elem
     const downloadFileName = textToSlug(endTitle);
 
     return (
-        <AudioAsync
+        <Audio
             className={markdownStyle.markdown_audio}
             downloadFileName={downloadFileName}
             duration={duration}

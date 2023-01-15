@@ -1,11 +1,10 @@
 import {useContext} from 'react';
-import {TrackType} from 'react-audio-player-pro';
+import {AudioPlayer, TrackType} from 'react-audio-player-pro';
 
 import {ArticleContextType} from '../article-context/article-context-type';
 import {articleContext} from '../article-context/article-context';
 import {Markdown} from '../../../layout/markdown/markdown';
 import {markdownAudioRegExp, parseAudioTag} from '../../../layout/markdown/markdown-helper-audio';
-import {AudioPlayerAsync} from '../../../layout/audio-player/audio-player';
 import {defaultMediaMetadata} from '../../../layout/audio-player/audio-player-const';
 import articleStyle from '../article.scss';
 import {getPathToFile} from '../../../util/path';
@@ -31,7 +30,7 @@ export function ArticleAudioList(): JSX.Element {
 
     return (
         <>
-            <AudioPlayerAsync trackList={trackList} />
+            <AudioPlayer trackList={trackList} />
 
             <Markdown
                 articleTitle={title}
