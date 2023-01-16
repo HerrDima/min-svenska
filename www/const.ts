@@ -15,7 +15,7 @@ export const googleAdSenseTopAdId = '4086736743';
 export const siteDomain = 'herrdima.github.io';
 export const httpsSiteDomain = `https://${siteDomain}`;
 export const openGraphLocaleName = 'sv_SE';
-export const copyrightName = 'Min Svenska';
+export const copyrightName = 'Sveriges Katt';
 // special file 1/2
 export const companyLogoPngFileName = 'company-logo.png';
 // special file 2/2

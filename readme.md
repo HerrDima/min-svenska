@@ -1,4 +1,4 @@
-# Min Svenska
+# Sveriges Katt
 
 
 [![GitHub license](https://img.shields.io/npm/l/min-svenska)](https://github.com/HerrDima/min-svenska/blob/master/license)

@@ -1,8 +1,8 @@
 {
-    "name": "Min Svenska",
+    "name": "Sveriges Katt",
     "lang": "sv-SE",
     "display": "standalone",
-    "short_name": "Min Svenska",
+    "short_name": "Sveriges Katt",
     "start_url": "/",
     "scope": "/",
     "background_color": "#f0ece3",
