@@ -44,7 +44,7 @@ export async function removeExtraStaticFiles(request: FastifyRequest, reply: Fas
         }
 
         console.warn('[WARNING] >>> to remove file, uncomment next line');
-        // fileSystem.unlink(path.join(cwd, uploadFileFolder, fileName));
+        fileSystem.unlink(path.join(cwd, uploadFileFolder, fileName));
 
         extraFileList.push(fileName);
     });
