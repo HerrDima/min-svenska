@@ -60,6 +60,7 @@ async function copyStaticFileFolder(): Promise<void> {
 }
 
 async function collectHtmlPages(): Promise<Array<StaticPageType>> {
+    const {log} = console;
     const articleList: Array<ArticleType> = await articleCrud.findMany({isActive: true, isInSiteMapXmlSeo: true});
 
     const slugList = articleList.map<string>((article: ArticleType): string => {
@@ -71,6 +72,7 @@ async function collectHtmlPages(): Promise<Array<StaticPageType>> {
     // eslint-disable-next-line no-loops/no-loops
     for (const slug of slugList) {
         pageList.push(await getStaticPage(slug));
+        log(`>> >> [makeStatic]: collectHtmlPages: ${slugList.indexOf(slug) + 1} / ${slugList.length}`);
     }
 
     return pageList;
@@ -170,7 +172,10 @@ async function makeCompanyLogo() {
     createWriteStream(path.join(cwd, staticSiteFolderName, companyLogoPath)).write(responseLogoBuffer);
 }
 
+// eslint-disable-next-line max-statements
 async function makeImages(pageList: Array<StaticPageType>) {
+    const {log} = console;
+
     await makeDirectory(cwd, staticSiteFolderName, 'api-image');
 
     const imageUrlList: Array<ImageUrlType> = [];
@@ -190,8 +195,8 @@ async function makeImages(pageList: Array<StaticPageType>) {
         const [ignoredSpace, ignoredImageApiString, imageSize, imageName] = imageUrlChunks;
 
         if (!imageName || !imageSize) {
-            console.log('----------------------------------------');
-            console.log(`[ERROR]: makeImages: wrong image url, slug / url:', ${imageUrl.slug}/${imageUrl.url}`);
+            log('----------------------------------------');
+            log(`[ERROR]: makeImages: wrong image url, slug / url: ${imageUrl.slug} / ${imageUrl.url}`);
             // eslint-disable-next-line no-continue
             continue;
         }
@@ -201,8 +206,8 @@ async function makeImages(pageList: Array<StaticPageType>) {
         const imageResponse: Response = await fetch(mainUrl + imageUrl.url);
 
         if (!imageResponse.ok) {
-            console.log('----------------------------------------');
-            console.log(`[ERROR]: makeImages: can not get slug/url:', ${imageUrl.slug} / ${imageUrl.url}`);
+            log('----------------------------------------');
+            log(`[ERROR]: makeImages: can not get slug / url: ${imageUrl.slug} / ${imageUrl.url}`);
             // eslint-disable-next-line no-continue
             continue;
         }
@@ -212,8 +217,7 @@ async function makeImages(pageList: Array<StaticPageType>) {
 
         createWriteStream(path.join(cwd, staticSiteFolderName, imageUrl.url)).write(imageBuffer);
 
-        // console.log(`[INFO]: makeImages: ${imageUrlList.indexOf(imageUrl) + 1}/${imageUrlList.length} : ${imageUrl.url}`);
-        // console.log(imageName, imageSize);
+        log(`>> >> [makeStatic]: makeImages: ${imageUrlList.indexOf(imageUrl) + 1} / ${imageUrlList.length}`);
     }
 }
 
@@ -231,52 +235,54 @@ async function makeIndexHtml(pageList: Array<StaticPageType>) {
 
 // eslint-disable-next-line max-statements
 export async function makeStatic() {
-    console.log('> [makeStatic]: makeStatic: begin');
+    const {log} = console;
 
-    console.log('>> [makeStatic]: copyStaticFileFolder: begin');
+    log('> [makeStatic]: makeStatic: begin');
+
+    log('>> [makeStatic]: copyStaticFileFolder: begin');
     await copyStaticFileFolder();
-    console.log('>> [makeStatic]: copyStaticFileFolder: end');
+    log('>> [makeStatic]: copyStaticFileFolder: end');
 
-    console.log('>> [makeStatic]: collectHtmlPages: begin');
+    log('>> [makeStatic]: collectHtmlPages: begin');
     const pageList: Array<StaticPageType> = await collectHtmlPages();
 
-    console.log('>> [makeStatic]: collectHtmlPages: end');
+    log('>> [makeStatic]: collectHtmlPages: end');
 
-    console.log('>> [makeStatic]: makeHtmlPages: begin');
+    log('>> [makeStatic]: makeHtmlPages: begin');
     await makeHtmlPages(pageList);
-    console.log('>> [makeStatic]: makeHtmlPages: end');
+    log('>> [makeStatic]: makeHtmlPages: end');
 
-    console.log('>> [makeStatic]: makeServicePages: begin');
+    log('>> [makeStatic]: makeServicePages: begin');
     await makeServicePages();
-    console.log('>> [makeStatic]: makeServicePages: end');
+    log('>> [makeStatic]: makeServicePages: end');
 
-    console.log('>> [makeStatic]: makeApiArticle: begin');
+    log('>> [makeStatic]: makeApiArticle: begin');
     await makeApiArticle(pageList);
-    console.log('>> [makeStatic]: makeApiArticle: end');
+    log('>> [makeStatic]: makeApiArticle: end');
 
-    console.log('>> [makeStatic]: makeApiArticleSearch: begin');
+    log('>> [makeStatic]: makeApiArticleSearch: begin');
     await makeApiArticleSearch();
-    console.log('>> [makeStatic]: makeApiArticleSearch: end');
+    log('>> [makeStatic]: makeApiArticleSearch: end');
 
-    console.log('>> [makeStatic]: makeIcons: begin');
+    log('>> [makeStatic]: makeIcons: begin');
     await makeIcons();
-    console.log('>> [makeStatic]: makeIcons: end');
+    log('>> [makeStatic]: makeIcons: end');
 
-    console.log('>> [makeStatic]: makeCompanyLogo: begin');
+    log('>> [makeStatic]: makeCompanyLogo: begin');
     await makeCompanyLogo();
-    console.log('>> [makeStatic]: makeCompanyLogo: end');
+    log('>> [makeStatic]: makeCompanyLogo: end');
 
-    console.log('>> [makeStatic]: makeImages: begin');
+    log('>> [makeStatic]: makeImages: begin');
     await makeImages(pageList);
-    console.log('>> [makeStatic]: makeImages: end');
+    log('>> [makeStatic]: makeImages: end');
 
-    console.log('>> [makeStatic]: copyDistFolder: begin');
+    log('>> [makeStatic]: copyDistFolder: begin');
     await copyDistributionFolder();
-    console.log('>> [makeStatic]: copyDistFolder: end');
+    log('>> [makeStatic]: copyDistFolder: end');
 
-    console.log('>> [makeStatic]: makeIndexHtml: begin');
+    log('>> [makeStatic]: makeIndexHtml: begin');
     await makeIndexHtml(pageList);
-    console.log('>> [makeStatic]: makeIndexHtml: end');
+    log('>> [makeStatic]: makeIndexHtml: end');
 
-    console.log('> [makeStatic]: makeStatic: end');
+    log('> [makeStatic]: makeStatic: end');
 }
