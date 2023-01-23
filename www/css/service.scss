@@ -108,11 +108,3 @@
         padding-right: $ui-unit * 2;
     }
 }
-
-@media screen and (max-width: $phone-width) {
-    %width-limit,
-    .width_limit {
-        padding-left: $ui-unit;
-        padding-right: $ui-unit;
-    }
-}

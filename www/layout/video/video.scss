@@ -1,6 +1,7 @@
 //$video-tag-z-index: 1;
-$video-tag-started-z-index: 5;
-$start-video-button-z-index: 4;
+$video-tag-started-z-index: 10;
+$start-video-button-z-index: 6;
+$video-title-z-index: 4;
 $image-preview-z-index: 3;
 
 .video {
@@ -79,7 +80,7 @@ $image-preview-z-index: 3;
         position: absolute;
         top: 0;
         width: 100%;
-        z-index: $start-video-button-z-index;
+        z-index: $video-title-z-index;
     }
 
     .video__duration {
@@ -93,6 +94,6 @@ $image-preview-z-index: 3;
         margin: 0;
         padding: 4px 8px;
         position: absolute;
-        z-index: $start-video-button-z-index;
+        z-index: $video-title-z-index;
     }
 }
