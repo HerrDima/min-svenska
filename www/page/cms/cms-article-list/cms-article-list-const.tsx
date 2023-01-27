@@ -1,7 +1,8 @@
-/* global HTMLInputElement */
-import {SyntheticEvent} from 'react';
+/* global HTMLInputElement, setTimeout */
+import {SyntheticEvent, useEffect, useRef} from 'react';
 import {Input} from 'antd';
-import {ColumnType} from 'antd/es/table/interface';
+import type {InputRef} from 'antd';
+import {ColumnType, FilterDropdownProps} from 'antd/es/table/interface';
 import {SearchOutlined} from '@ant-design/icons';
 import {Link} from 'react-router-dom';
 
@@ -43,7 +44,21 @@ export function getArticleTableColumnList(
             dataIndex: 'title',
             defaultSortOrder: SortDirectionEnum.ascend,
             // eslint-disable-next-line react/no-multi-comp
-            filterDropdown: () => {
+            filterDropdown: (filterProps: FilterDropdownProps): JSX.Element => {
+                const {visible} = filterProps;
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const inputRef = useRef<InputRef>(null);
+
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                useEffect(() => {
+                    if (visible) {
+                        // wait until the input appears
+                        setTimeout(() => {
+                            inputRef.current?.focus({cursor: 'start'});
+                        }, 100);
+                    }
+                }, [visible]);
+
                 return (
                     <Input
                         key="title"
@@ -52,6 +67,7 @@ export function getArticleTableColumnList(
                             setSearchText(evt.currentTarget.value.trim());
                         }}
                         placeholder="Search..."
+                        ref={inputRef}
                     />
                 );
             },
@@ -71,7 +87,21 @@ export function getArticleTableColumnList(
             dataIndex: 'slug',
             defaultSortOrder: null,
             // eslint-disable-next-line react/no-multi-comp
-            filterDropdown: () => {
+            filterDropdown: (filterProps: FilterDropdownProps): JSX.Element => {
+                const {visible} = filterProps;
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const inputRef = useRef<InputRef>(null);
+
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                useEffect(() => {
+                    if (visible) {
+                        // wait until the input appears
+                        setTimeout(() => {
+                            inputRef.current?.focus({cursor: 'start'});
+                        }, 100);
+                    }
+                }, [visible]);
+
                 return (
                     <Input
                         key="slug"
@@ -80,6 +110,7 @@ export function getArticleTableColumnList(
                             setSearchText(evt.currentTarget.value);
                         }}
                         placeholder="Search..."
+                        ref={inputRef}
                     />
                 );
             },
