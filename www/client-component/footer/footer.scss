@@ -17,12 +17,14 @@
 
     .footer_copyright,
     .footer_link {
-        @extend %link;
-
         color: $main-font-color;
         display: block;
         font-size: 14px;
         padding: $ui-unit 0;
+    }
+
+    .footer_link {
+        @extend %link;
     }
 
     .footer_copyright {
