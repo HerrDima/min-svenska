@@ -3,6 +3,11 @@ import {getPathToFile} from '../../util/path';
 import {textToSlug} from '../../util/human';
 import {NeverError} from '../../util/error';
 
+export type StringToJsxRawDataType = {
+    articleTitle: string;
+    htmlString: string;
+};
+
 // eslint-disable-next-line complexity
 export function getFileMarkdownByFullInfo(
     fullFileInfo: ArticleFileType,

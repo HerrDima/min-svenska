@@ -2,14 +2,21 @@ import {getPathToFile, getPathToImage} from '../../util/path';
 import {Image} from '../Image/image';
 
 import markdownStyle from './markdown.scss';
+import {StringToJsxRawDataType} from './markdown-helper';
+import {MarkdownItemCounter} from './markdown-item-counter';
 
 // eslint-disable-next-line complexity
-export function getImageFromHtml(imageHtmlCode: string, title: string): JSX.Element {
-    const [ignoredFullWidthString, widthAsString = ''] = imageHtmlCode.match(/width="(\d+)"/) || ['', '0'];
-    const [ignoredFullHeightString, heightAsString = ''] = imageHtmlCode.match(/height="(\d+)"/) || ['', '0'];
-    const [ignoredFullSrcString, srcAsString = ''] = imageHtmlCode.match(/src="([^"]*?)"/) || ['', ''];
-    const [ignoredFullAltString, altAsString = ''] = imageHtmlCode.match(/alt="([^"]*?)"/) || ['', ''];
-    const [ignoredFullTitleString, titleAsString = ''] = imageHtmlCode.match(/title="([^"]*?)"/) || ['', ''];
+export function getImageFromHtml(
+    rawData: StringToJsxRawDataType,
+    markdownItemCounter: MarkdownItemCounter
+): JSX.Element {
+    const {htmlString, articleTitle} = rawData;
+
+    const [ignoredFullWidthString, widthAsString = ''] = htmlString.match(/width="(\d+)"/) || ['', '0'];
+    const [ignoredFullHeightString, heightAsString = ''] = htmlString.match(/height="(\d+)"/) || ['', '0'];
+    const [ignoredFullSrcString, srcAsString = ''] = htmlString.match(/src="([^"]*?)"/) || ['', ''];
+    const [ignoredFullAltString, altAsString = ''] = htmlString.match(/alt="([^"]*?)"/) || ['', ''];
+    const [ignoredFullTitleString, titleAsString = ''] = htmlString.match(/title="([^"]*?)"/) || ['', ''];
 
     return (
         <Image
@@ -20,7 +27,8 @@ export function getImageFromHtml(imageHtmlCode: string, title: string): JSX.Elem
             getPathToImage={getPathToImage}
             height={Number.parseInt(heightAsString.trim(), 10)}
             imgClassName={markdownStyle.markdown_image}
-            title={(titleAsString || title).trim()}
+            loading={markdownItemCounter.getLoadingImageType()}
+            title={(titleAsString || articleTitle).trim()}
             width={Number.parseInt(widthAsString.trim(), 10)}
         />
     );

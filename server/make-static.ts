@@ -6,7 +6,7 @@ import path from 'node:path';
 import {getArticleLinkToViewClient} from '../www/client-component/article/article-helper';
 import {generatePath, paginationQueryToURLSearchParameters} from '../www/util/url';
 import {appRoute} from '../www/component/app/app-route';
-import {appIconPngFileName, companyLogoPngFileName} from '../www/const';
+import {appIconPngFileName, companyLogoPngFileName, companyLogoPngHeight, companyLogoPngWidth} from '../www/const';
 import {getPathToImage} from '../www/util/path';
 import {articlePreviewKeyList} from '../www/client-component/search/search-const';
 
@@ -158,13 +158,13 @@ async function makeIcons() {
 }
 
 async function makeCompanyLogo() {
-    const logoWidth = 600;
-    const logoHeight = 60;
-
     await makeDirectory(cwd, staticSiteFolderName, 'api-image');
-    await makeDirectory(cwd, staticSiteFolderName, 'api-image', `${logoWidth}x${logoHeight}`);
+    await makeDirectory(cwd, staticSiteFolderName, 'api-image', `${companyLogoPngWidth}x${companyLogoPngHeight}`);
 
-    const companyLogoPath = getPathToImage(companyLogoPngFileName, {height: logoHeight, width: logoWidth});
+    const companyLogoPath = getPathToImage(companyLogoPngFileName, {
+        height: companyLogoPngHeight,
+        width: companyLogoPngWidth,
+    });
     const responseLogo: Response = await fetch(mainUrl + companyLogoPath);
     const responseLogoArrayBuffer = await responseLogo.arrayBuffer();
     const responseLogoBuffer = Buffer.from(responseLogoArrayBuffer);

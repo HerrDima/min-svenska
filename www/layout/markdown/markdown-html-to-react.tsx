@@ -3,7 +3,8 @@ import {Fragment} from 'react';
 import {getAudioFromHtml} from './markdown-helper-audio';
 import {getImageFromHtml} from './markdown-helper-image';
 import {getVideoFromHtml} from './markdown-helper-video';
-import {getIsEmptyHtml} from './markdown-helper';
+import {getIsEmptyHtml, StringToJsxRawDataType} from './markdown-helper';
+import {MarkdownItemCounter} from './markdown-item-counter';
 
 const markdownVideoRegExp = /<video [^>]+\/>/gi;
 const markdownAudioRegExp = /<audio [^>]+\/>/gi;
@@ -22,17 +23,27 @@ function getIsImageHtmlCode(htmlString: string): boolean {
     return htmlString.search(markdownImageRegExp) >= 0;
 }
 
-function htmlStringToJsx(htmlString: string, articleTitle: string): JSX.Element {
+function htmlStringToJsx(rawData: StringToJsxRawDataType, markdownItemCounter: MarkdownItemCounter): JSX.Element {
+    const {htmlString} = rawData;
+
     if (getIsVideoHtmlCode(htmlString)) {
-        return getVideoFromHtml(htmlString, articleTitle);
+        // add image and video cause every video has image as poster
+        markdownItemCounter.increaseImage();
+        markdownItemCounter.increaseVideo();
+
+        return getVideoFromHtml(rawData, markdownItemCounter);
     }
 
     if (getIsAudioHtmlCode(htmlString)) {
-        return getAudioFromHtml(htmlString, articleTitle);
+        markdownItemCounter.increaseAudio();
+
+        return getAudioFromHtml(rawData);
     }
 
     if (getIsImageHtmlCode(htmlString)) {
-        return getImageFromHtml(htmlString, articleTitle);
+        markdownItemCounter.increaseImage();
+
+        return getImageFromHtml(rawData, markdownItemCounter);
     }
 
     console.error('[htmlStringToJsx] Can not parse html string');
@@ -50,6 +61,7 @@ export function MarkdownHtmlToReact(props: PropsType): JSX.Element {
     const {htmlCode, articleTitle} = props;
     const splitTextList: Array<string> = htmlCode.split(markdownReplaceRegExp);
     const replaceList: Array<string> = htmlCode.match(markdownReplaceRegExp) || [];
+    const markdownItemCounter = new MarkdownItemCounter();
 
     const jsxList: Array<JSX.Element> = splitTextList.map((htmlChunk: string, index: number): JSX.Element => {
         const key = index.toString(16);
@@ -61,7 +73,7 @@ export function MarkdownHtmlToReact(props: PropsType): JSX.Element {
                     // eslint-disable-next-line react/no-danger, id-match
                     <div dangerouslySetInnerHTML={{__html: htmlChunk}} />
                 )}
-                {replacePart ? htmlStringToJsx(replacePart, articleTitle) : null}
+                {replacePart ? htmlStringToJsx({articleTitle, htmlString: replacePart}, markdownItemCounter) : null}
             </Fragment>
         );
     });

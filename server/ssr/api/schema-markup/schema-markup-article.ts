@@ -4,7 +4,13 @@
 import {ArticleType} from '../../../article/article-type';
 import {SsrReplaceDataType} from '../ssr-helper/ssr-helper-type';
 import {getPathToImage} from '../../../../www/util/path';
-import {companyLogoPngFileName, copyrightName, httpsSiteDomain} from '../../../../www/const';
+import {
+    companyLogoPngFileName,
+    companyLogoPngHeight,
+    companyLogoPngWidth,
+    copyrightName,
+    httpsSiteDomain,
+} from '../../../../www/const';
 import {ArticleImageDataType, getImageListFromArticle} from '../../../sitemap/sitemap-img-xml';
 import {getClientArticleLinkWithDomain} from '../../../../www/client-component/article/article-helper';
 
@@ -19,7 +25,9 @@ export function getSchemaMarkupArticleSsrReplaceData(article: ArticleType): SsrR
         (imageData: ArticleImageDataType): string => imageData.src
     );
 
-    const companyLogo = httpsSiteDomain + getPathToImage(companyLogoPngFileName, {height: 60, width: 600});
+    const companyLogo =
+        httpsSiteDomain +
+        getPathToImage(companyLogoPngFileName, {height: companyLogoPngHeight, width: companyLogoPngWidth});
 
     const value = `
         <script type="application/ld+json">

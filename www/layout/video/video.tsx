@@ -1,4 +1,4 @@
-/* global HTMLVideoElement */
+/* global HTMLVideoElement, HTMLImageElement */
 
 import {useRef, useState, useCallback} from 'react';
 
@@ -22,6 +22,7 @@ type VideoPropsType = {
         imgClassName?: string;
     };
     poster: string;
+    posterLoading: HTMLImageElement['loading'];
     title: string;
     videoClassName?: string;
     width: number;
@@ -67,6 +68,7 @@ export function Video(props: VideoPropsType): JSX.Element {
         videoClassName,
         poster,
         duration,
+        posterLoading,
     } = props;
 
     return (
@@ -97,6 +99,7 @@ export function Video(props: VideoPropsType): JSX.Element {
                 getPathToImage={getPathToImage}
                 height={height}
                 imgClassName={`${videoStyle.video__image_tag} ${image?.imgClassName || ''}`.trim()}
+                loading={posterLoading}
                 title={title}
                 width={width}
             />

@@ -1,3 +1,5 @@
+/* global HTMLImageElement */
+
 import type {GetPathToFileType, GetPathToImageType} from '../../util/path';
 
 import {Source} from './source';
@@ -13,12 +15,14 @@ type ImagePropsType = {
     getPathToImage: GetPathToImageType;
     height: number;
     imgClassName?: string;
+    loading: HTMLImageElement['loading'];
     title: string;
     width: number;
 };
 
 export function Image(props: ImagePropsType): JSX.Element {
-    const {className, fileName, getPathToImage, getPathToFile, alt, width, height, title, imgClassName} = props;
+    const {className, fileName, getPathToImage, getPathToFile, alt, width, height, title, imgClassName, loading} =
+        props;
 
     const sourceTagList: Array<JSX.Element> = screenWidthList.map<JSX.Element>((mediaWidth: number): JSX.Element => {
         return (
@@ -40,7 +44,7 @@ export function Image(props: ImagePropsType): JSX.Element {
                 alt={alt}
                 className={imgClassName}
                 height={height}
-                loading="lazy"
+                loading={loading}
                 src={getPathToFile(fileName)}
                 title={title}
                 width={width}

@@ -5,6 +5,7 @@ import {textToSlug} from '../../util/human';
 import {getPathToFile} from '../../util/path';
 
 import markdownStyle from './markdown.scss';
+import {StringToJsxRawDataType} from './markdown-helper';
 
 export const markdownAudioRegExp = /<audio[\S\s]+?<\/audio>/gi;
 
@@ -27,10 +28,12 @@ export function parseAudioTag(audioTag: string): AudioTagDataType {
     };
 }
 
-export function getAudioFromHtml(audioHtmlCode: string, title: string): JSX.Element {
-    const {duration, fileName, title: parsedTitle} = parseAudioTag(audioHtmlCode);
+export function getAudioFromHtml(rawData: StringToJsxRawDataType): JSX.Element {
+    const {htmlString, articleTitle} = rawData;
 
-    const endTitle: string = parsedTitle || title;
+    const {duration, fileName, title: parsedTitle} = parseAudioTag(htmlString);
+
+    const endTitle: string = parsedTitle || articleTitle;
     const downloadFileName = textToSlug(endTitle);
 
     return (
