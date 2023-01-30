@@ -10,6 +10,7 @@ export const apiUrl = {
     adminArticleListPaginationPick: '/api/admin/article/pagination-pick',
     adminArticleUpdate: '/api/admin/article/update',
     adminFileUpload: '/api/admin/file/upload',
+    articleClientUrlListGet: '/api/article-client-list',
     clientArticleContextGet: '/api/client-article/:slug' as const,
     clientMakePdf: '/api/client-make-pdf',
     clientSearchArticle: '/api/client-article/pagination-pick',

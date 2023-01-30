@@ -24,6 +24,7 @@ import {
     postAdminArticleUpdate,
     getClientArticleContextData,
     getArticleClientListPaginationPick,
+    getArticleClientUrlList,
 } from './article/article-api';
 import {getImage, uploadFile} from './file/file';
 import {adminOnly} from './auth/auth-helper';
@@ -105,6 +106,7 @@ const isMakeStaticSite = process.env.MAKE_STATIC_SITE === 'TRUE';
     fastify.post(apiUrl.adminFileUpload, adminOnly<ArticleFileType>(uploadFile));
     fastify.get(apiUrl.imageGet, getImage);
     fastify.get(apiUrl.clientArticleContextGet, getClientArticleContextData);
+    fastify.get(apiUrl.articleClientUrlListGet, getArticleClientUrlList);
     fastify.get(apiUrl.clientSearchArticle, getArticleClientListPaginationPick);
     fastify.post(apiUrl.clientMakePdf, getPdf);
     fastify.get(apiUrl.removeExtraStaticFilesGet, adminOnly<GetExtraFilesType>(removeExtraStaticFiles));

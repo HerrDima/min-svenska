@@ -7,6 +7,7 @@ import {makeClientArticleContextData} from '../ssr/api/srr-article';
 import {getStringFromUnknown} from '../../www/util/type';
 import {ArticleContextType} from '../../www/client-component/article/article-context/article-context-type';
 import {PaginationResultType} from '../data-base/data-base-type';
+import {getArticleLinkToViewClient} from '../../www/client-component/article/article-helper';
 
 import {articleCrud} from './article';
 import {ArticleType, ParsedRequestQueryType} from './article-type';
@@ -236,4 +237,15 @@ export async function getClientArticleContextData(
     reply.code(status).header(...mainResponseHeader);
 
     return clientArticleData;
+}
+
+export async function getArticleClientUrlList(request: FastifyRequest, reply: FastifyReply): Promise<Array<string>> {
+    const articleList: Array<ArticleType> = await articleCrud.findMany({isActive: true});
+    const urlList: Array<string> = articleList.map<string>((article: ArticleType): string =>
+        getArticleLinkToViewClient(article.slug)
+    );
+
+    reply.code(200).header(...mainResponseHeader);
+
+    return urlList;
 }
