@@ -67,6 +67,51 @@ declare module 'webp-converter' {
     export default webpConverter;
 }
 
+declare module 'lighthouse' {
+    export declare type LighthouseCategoryNameType = 'accessibility' | 'best-practices' | 'performance' | 'pwa' | 'seo';
+
+    export declare type LighthouseResultLhrCategoryType = {
+        id: string;
+        score: number;
+        title: string;
+    };
+
+    export declare type LighthouseConfigType = {
+        formFactor: 'desktop' | 'mobile';
+        logLevel: 'info' | 'quiet' | 'verbose';
+        onlyCategories?: Array<LighthouseCategoryNameType>;
+        output: 'csv' | 'html' | 'json';
+        port: string;
+        screenEmulation: {
+            deviceScaleRatio: number;
+            // turn on / turin off emulation
+            disabled: boolean;
+            height: number;
+            mobile: boolean;
+            width: number;
+        };
+    };
+
+    export declare type LighthouseResultLhrCategoriesType = Record<
+        LighthouseCategoryNameType,
+        LighthouseResultLhrCategoryType
+    >;
+
+    export declare type LighthouseResultLhrType = {
+        categories: LighthouseResultLhrCategoriesType;
+    };
+
+    export declare type LighthouseResultType = {
+        lhr: LighthouseResultLhrType;
+        report: string;
+    };
+
+    declare type LighthouseType = (url: string, config: LighthouseConfigType) => Promise<LighthouseResultType>;
+
+    const lighthouse: LighthouseType;
+
+    export default lighthouse;
+}
 /*
 declare module '*.scss';
 declare module '*.png';
