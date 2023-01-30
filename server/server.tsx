@@ -52,12 +52,12 @@ const isMakeStaticSite = process.env.MAKE_STATIC_SITE === 'TRUE';
     // //////////////
     // Services
     // //////////////
-    fastify.register(fastifyCors);
-    fastify.register(fastifyCompress);
-    fastify.register(fastifyMultipart);
+    await fastify.register(fastifyCors);
+    await fastify.register(fastifyCompress);
+    await fastify.register(fastifyMultipart);
 
     // first of two fastifyStaticServer plugin
-    fastify.register(fastifyStatic, {
+    await fastify.register(fastifyStatic, {
         prefix: `/${uploadFileFolder}/`,
         root: uploadFolder,
         setHeaders: (response: {setHeader: (header: string, value: string) => void}) => {
@@ -67,7 +67,7 @@ const isMakeStaticSite = process.env.MAKE_STATIC_SITE === 'TRUE';
     });
 
     // second of two fastifyStaticServer plugin
-    fastify.register(fastifyStatic, {
+    await fastify.register(fastifyStatic, {
         decorateReply: false, // the reply decorator has been added by the first plugin registration
         prefix: '/', // optional: default '/'
         root: path.join(cwd, 'dist'),
@@ -78,7 +78,7 @@ const isMakeStaticSite = process.env.MAKE_STATIC_SITE === 'TRUE';
     });
 
     // options for setCookie, see https://github.com/fastify/fastify-cookie
-    fastify.register(fastifySecureSession, {
+    await fastify.register(fastifySecureSession, {
         // the name of the session cookie, defaults to 'session'
         cookie: {
             httpOnly: true, // Use httpOnly for all production purposes
@@ -86,7 +86,7 @@ const isMakeStaticSite = process.env.MAKE_STATIC_SITE === 'TRUE';
         },
         cookieName: siteCookieKey,
         // adapt this to point to the directory where secret-key is located
-        key: Buffer.from(secretKey, 'base64').slice(0, 32),
+        key: Buffer.from(secretKey, 'base64').subarray(0, 32),
     });
 
     // //////////////
@@ -219,18 +219,4 @@ const isMakeStaticSite = process.env.MAKE_STATIC_SITE === 'TRUE';
             console.info(`> Server on port: ${serverPort} has been closed`);
         }
     });
-
-    // fastify.get('/set-cookie', (request: FastifyRequest, reply: FastifyReply) => {
-    //     console.log('/////////');
-    //     console.log('set cookie 1');
-    //     console.log(request.session.get('data'));
-    //
-    //     // reply.setCookie('session', 'value', { secure: false }) // this will not be used
-    //
-    //     request.session.set('data', '12312312312321313');
-    //     request.session.options({maxAge: 1000 * 60 * 60});
-    //     console.log('set cookie 2');
-    //
-    //     reply.send('hello world');
-    // });
 })();
