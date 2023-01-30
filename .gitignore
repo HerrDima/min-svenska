@@ -23,6 +23,7 @@ npm-debug.log*
 /coverage-ts/
 /tsc-check/
 /coverage/
+/lighthouse/report/
 
 # backstopjs
 /test-backstop/report/

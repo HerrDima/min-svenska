@@ -21,11 +21,11 @@ const siteUrl = 'https://herrdima.github.io';
 
 const urlList: Array<string> = [
     '/',
-    '/article/sanger-och-texter',
-    '/article/sanger-for-barn',
-    '/article/lille-katt',
-    '/article/banan-melon-kiwi-och-citron',
-    '/article/gar-det-bra',
+    // '/article/sanger-och-texter',
+    // '/article/sanger-for-barn',
+    // '/article/lille-katt',
+    // '/article/banan-melon-kiwi-och-citron',
+    // '/article/gar-det-bra',
 ];
 
 type LighthouseFormFactorType = LighthouseConfigType['formFactor'];
@@ -74,6 +74,8 @@ async function getLighthouseResult(
     const {url, port} = config;
 
     const desktop = await lighthouse(url, {
+        disableNetworkThrottling: true,
+        disableStorageReset: false,
         formFactor: 'desktop',
         logLevel: 'quiet',
         output: 'html',
@@ -86,9 +88,12 @@ async function getLighthouseResult(
             mobile: false,
             width: 980,
         },
+        throttlingMethod: 'provided',
     });
 
     const mobile = await lighthouse(url, {
+        disableNetworkThrottling: true,
+        disableStorageReset: false,
         formFactor: 'mobile',
         logLevel: 'quiet',
         output: 'html',
@@ -101,6 +106,7 @@ async function getLighthouseResult(
             mobile: true,
             width: 320,
         },
+        throttlingMethod: 'provided',
     });
 
     return {desktop, mobile};
@@ -110,7 +116,7 @@ async function getLighthouseResult(
 (async () => {
     const browser = await puppeteer.launch({
         defaultViewport: null,
-        headless: false,
+        headless: true,
     });
 
     const {port} = new URL(browser.wsEndpoint());

@@ -77,6 +77,8 @@ declare module 'lighthouse' {
     };
 
     export declare type LighthouseConfigType = {
+        disableNetworkThrottling: boolean;
+        disableStorageReset: boolean;
         formFactor: 'desktop' | 'mobile';
         logLevel: 'info' | 'quiet' | 'verbose';
         onlyCategories?: Array<LighthouseCategoryNameType>;
@@ -90,6 +92,7 @@ declare module 'lighthouse' {
             mobile: boolean;
             width: number;
         };
+        throttlingMethod?: 'provided';
     };
 
     export declare type LighthouseResultLhrCategoriesType = Record<
