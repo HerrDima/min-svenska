@@ -7,19 +7,29 @@ type QueueTaskType = {
     task: QueueRunningTaskType;
 };
 
-type TaskRunnerConfigType = {
+export type TaskRunnerOnTaskDoneArgumentType = {
+    restTaskCount: number;
+    taskInProgressCount: number;
+};
+type TaskRunnerOnTaskDoneType = (taskRunnerData: TaskRunnerOnTaskDoneArgumentType) => void;
+
+export type TaskRunnerConfigType = {
     maxWorkerCount: number;
+    onTaskEnd?: TaskRunnerOnTaskDoneType;
 };
 
-export class TaskRunner {
-    private taskList: Array<QueueTaskType> = [];
+function noop() {
+    return;
+}
 
-    // private isWorking = false;
+export class TaskRunner {
+    private readonly taskList: Array<QueueTaskType> = [];
     private maxWorkerCount = 1;
     private currentWorkerCount = 0;
+    private readonly onTaskEnd: TaskRunnerOnTaskDoneType = noop;
 
     constructor(config: TaskRunnerConfigType) {
-        const {maxWorkerCount} = config;
+        const {maxWorkerCount, onTaskEnd} = config;
 
         if (maxWorkerCount < 1) {
             throw new Error('[TaskRunner]: maxWorkerCount should be >= 1.');
@@ -28,10 +38,15 @@ export class TaskRunner {
         this.taskList = [];
         this.maxWorkerCount = maxWorkerCount;
         this.currentWorkerCount = 0;
+        this.onTaskEnd = onTaskEnd || noop;
     }
 
-    public getCurrentWorkerCount(): number {
+    private getCurrentWorkerCount(): number {
         return this.currentWorkerCount;
+    }
+
+    private getTaskCount(): number {
+        return this.taskList.length;
     }
 
     private getHasFreeWorkers(): boolean {
@@ -54,24 +69,28 @@ export class TaskRunner {
         this.taskList.splice(0, 1);
 
         if (fistTask) {
-            try {
-                this.currentWorkerCount += 1;
+            this.currentWorkerCount += 1;
 
+            try {
                 await fistTask.task();
                 fistTask.resolve();
-
-                this.currentWorkerCount -= 1;
             } catch (error: unknown) {
-                this.currentWorkerCount -= 1;
                 if (error instanceof Error) {
                     fistTask.reject(error);
                 } else {
                     fistTask.reject(new Error('[TaskRunner]: Task running with error!'));
                 }
             }
+
+            this.currentWorkerCount -= 1;
+
+            this.onTaskEnd({
+                restTaskCount: this.getTaskCount(),
+                taskInProgressCount: this.currentWorkerCount,
+            });
         }
 
-        if (this.taskList.length > 0) {
+        if (this.getTaskCount() > 0) {
             await this.run();
         }
     }

@@ -62,3 +62,12 @@ export function sortStringCallbackReverse(stringA: string, stringB: string): num
 export function getTickCross(isEnable: boolean): string {
     return isEnable ? '✔' : '❌';
 }
+
+export function formatProgress(current: number, max: number): string {
+    const partCount = 20;
+    const currentPart = Math.floor((current / max) * partCount);
+    const progressString = ''.padEnd(currentPart, '/').padEnd(partCount, '.');
+    const currentString = current.toString(10).padStart(max.toString(10).length, ' ');
+
+    return `[${progressString}] ${currentString} / ${max}`;
+}

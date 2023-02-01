@@ -22,11 +22,20 @@ export async function makeDirectory(...args: Array<string>): Promise<void> {
         await fileSystem.mkdir(pathToFolder);
     }
 }
+export async function tryToMakeDirectorySilent(...args: Array<string>): Promise<void> {
+    const pathToFolder: string = path.join(...args);
+
+    try {
+        await fileSystem.mkdir(pathToFolder);
+    } catch {
+        // console.log('[ERROR]: tryToMkDir: can not create folder:', path.join(...args));
+    }
+}
 
 export async function tryToRemoveDirectory(...args: Array<string>): Promise<void> {
     try {
         await fileSystem.rmdir(path.join(...args), {recursive: true});
     } catch {
-        // console.log('[ERROR]: tryToMkdir: can not create folder:', path.join(...args));
+        // console.log('[ERROR]: tryToRmDir: can not create folder:', path.join(...args));
     }
 }

@@ -9,20 +9,22 @@ import {appRoute} from '../www/component/app/app-route';
 import {appIconPngFileName, companyLogoPngFileName, companyLogoPngHeight, companyLogoPngWidth} from '../www/const';
 import {getPathToImage} from '../www/util/path';
 import {articlePreviewKeyList} from '../www/client-component/search/search-const';
-import {takeTimeLog, waitForCallback} from '../www/util/time';
-import {TaskRunner} from '../www/util/task-runner';
+import {takeTimeLog} from '../www/util/time';
+import {TaskRunner, TaskRunnerOnTaskDoneArgumentType} from '../www/util/task-runner';
+import {formatProgress} from '../www/util/string';
 
 import {articleCrud} from './article/article';
 import {ArticleType} from './article/article-type';
 import {uploadFileFolder} from './file/file-const';
 import {apiUrl, serverPort} from './const';
 import {rootArticleSlug} from './article/article-const';
-import {makeDirectory} from './file/directory';
+import {makeDirectory, tryToMakeDirectorySilent} from './file/directory';
 
 const staticSiteFolderName = 'static-site';
 const mainUrl = `http://127.0.0.1:${serverPort}`;
 
 const cwd = process.cwd();
+const maxWorkerCount = 8;
 
 type StaticPageType = Readonly<{
     html: string;
@@ -71,25 +73,59 @@ async function collectHtmlPages(): Promise<Array<StaticPageType>> {
 
     const pageList: Array<StaticPageType> = [];
 
-    // eslint-disable-next-line no-loops/no-loops
-    for (const slug of slugList) {
-        pageList.push(await getStaticPage(slug));
-        log(`>> >> [makeStatic]: collectHtmlPages: ${slugList.indexOf(slug) + 1} / ${slugList.length}`);
-    }
+    const progressCounterMax: number = slugList.length;
+    const taskRunner = new TaskRunner({
+        maxWorkerCount,
+        onTaskEnd: (taskRunnerData: TaskRunnerOnTaskDoneArgumentType) => {
+            const {restTaskCount, taskInProgressCount} = taskRunnerData;
+            const progressCount = progressCounterMax - restTaskCount - taskInProgressCount;
+
+            log(`>> >> [makeStatic]: collectHtmlPages: ${formatProgress(progressCount, progressCounterMax)}`);
+        },
+    });
+
+    const taskPromiseList: Array<Promise<unknown>> = slugList.map<Promise<unknown>>(
+        (slug: string): Promise<unknown> => {
+            return taskRunner.add(async () => {
+                pageList.push(await getStaticPage(slug));
+            });
+        }
+    );
+
+    await Promise.all(taskPromiseList);
 
     return pageList;
 }
 
 async function makeHtmlPages(pageList: Array<StaticPageType>) {
+    const {log} = console;
+
     await makeDirectory(cwd, staticSiteFolderName, 'article');
 
-    // write html files
-    // eslint-disable-next-line no-loops/no-loops
-    for (const page of pageList) {
-        const htmlPath = generatePath<typeof appRoute.article.path>(appRoute.article.path, {slug: page.slug}) + '.html';
+    const progressCounterMax: number = pageList.length;
+    const taskRunner = new TaskRunner({
+        maxWorkerCount,
+        onTaskEnd: (taskRunnerData: TaskRunnerOnTaskDoneArgumentType) => {
+            const {restTaskCount, taskInProgressCount} = taskRunnerData;
+            const progressCount = progressCounterMax - restTaskCount - taskInProgressCount;
 
-        await fileSystem.writeFile(path.join(cwd, staticSiteFolderName, htmlPath), page.html);
-    }
+            log(`>> >> [makeStatic]: makeHtmlPages: ${formatProgress(progressCount, progressCounterMax)}`);
+        },
+    });
+
+    // write html files
+    const taskPromiseList: Array<Promise<unknown>> = pageList.map<Promise<unknown>>(
+        (page: StaticPageType): Promise<unknown> => {
+            return taskRunner.add(async () => {
+                const htmlPath =
+                    generatePath<typeof appRoute.article.path>(appRoute.article.path, {slug: page.slug}) + '.html';
+
+                await fileSystem.writeFile(path.join(cwd, staticSiteFolderName, htmlPath), page.html);
+            });
+        }
+    );
+
+    await Promise.all(taskPromiseList);
 }
 
 async function makeServicePages() {
@@ -101,20 +137,41 @@ async function makeServicePages() {
 }
 
 async function makeApiArticle(pageList: Array<StaticPageType>) {
+    const {log} = console;
+
     await makeDirectory(cwd, staticSiteFolderName, 'api');
     // eslint-disable-next-line sonarjs/no-duplicate-string
     await makeDirectory(cwd, staticSiteFolderName, 'api', 'client-article');
 
-    // write html files
-    // eslint-disable-next-line no-loops/no-loops
-    for (const page of pageList) {
-        const apiPath = generatePath<typeof apiUrl.clientArticleContextGet>(apiUrl.clientArticleContextGet, {
-            slug: page.slug,
-        });
-        const data = await getTextFromUrl(mainUrl + apiPath);
+    const progressCounterMax: number = pageList.length;
+    const taskRunner = new TaskRunner({
+        maxWorkerCount,
+        onTaskEnd: (taskRunnerData: TaskRunnerOnTaskDoneArgumentType) => {
+            const {restTaskCount, taskInProgressCount} = taskRunnerData;
+            const progressCount = progressCounterMax - restTaskCount - taskInProgressCount;
 
-        await fileSystem.writeFile(path.join(cwd, staticSiteFolderName, 'api', 'client-article', page.slug), data);
-    }
+            log(`>> >> [makeStatic]: makeApiArticle: ${formatProgress(progressCount, progressCounterMax)}`);
+        },
+    });
+
+    // write html files
+    const taskPromiseList: Array<Promise<unknown>> = pageList.map<Promise<unknown>>(
+        (page: StaticPageType): Promise<unknown> => {
+            return taskRunner.add(async () => {
+                const apiPath = generatePath<typeof apiUrl.clientArticleContextGet>(apiUrl.clientArticleContextGet, {
+                    slug: page.slug,
+                });
+                const data = await getTextFromUrl(mainUrl + apiPath);
+
+                await fileSystem.writeFile(
+                    path.join(cwd, staticSiteFolderName, 'api', 'client-article', page.slug),
+                    data
+                );
+            });
+        }
+    );
+
+    await Promise.all(taskPromiseList);
 }
 
 async function makeApiArticleSearch() {
@@ -135,6 +192,8 @@ async function makeApiArticleSearch() {
 }
 
 async function makeIcons() {
+    const {log} = console;
+
     await makeDirectory(cwd, staticSiteFolderName, 'api-image');
 
     const appIconSizeList: Array<number> = [
@@ -144,19 +203,36 @@ async function makeIcons() {
         57, 60, 72, 76, 114, 120, 144, 152, 180,
     ];
 
-    // eslint-disable-next-line no-loops/no-loops
-    for (const iconSize of appIconSizeList) {
-        const sizeFolderName = `${iconSize}x${iconSize}`;
+    const progressCounterMax: number = appIconSizeList.length;
 
-        await makeDirectory(cwd, staticSiteFolderName, 'api-image', sizeFolderName);
+    const taskRunner = new TaskRunner({
+        maxWorkerCount,
+        onTaskEnd: (taskRunnerData: TaskRunnerOnTaskDoneArgumentType) => {
+            const {restTaskCount, taskInProgressCount} = taskRunnerData;
+            const progressCount = progressCounterMax - restTaskCount - taskInProgressCount;
 
-        const iconImagePath = getPathToImage(appIconPngFileName, {height: iconSize, width: iconSize});
-        const responseIcon: Response = await fetch(mainUrl + iconImagePath);
-        const responseIconArrayBuffer = await responseIcon.arrayBuffer();
-        const responseIconBuffer = Buffer.from(responseIconArrayBuffer);
+            log(`>> >> [makeStatic]: makeIcons: ${formatProgress(progressCount, progressCounterMax)}`);
+        },
+    });
 
-        createWriteStream(path.join(cwd, staticSiteFolderName, iconImagePath)).write(responseIconBuffer);
-    }
+    const taskPromiseList: Array<Promise<unknown>> = appIconSizeList.map<Promise<unknown>>(
+        (iconSize: number): Promise<unknown> => {
+            return taskRunner.add(async () => {
+                const sizeFolderName = `${iconSize}x${iconSize}`;
+
+                await tryToMakeDirectorySilent(cwd, staticSiteFolderName, 'api-image', sizeFolderName);
+
+                const iconImagePath = getPathToImage(appIconPngFileName, {height: iconSize, width: iconSize});
+                const responseIcon: Response = await fetch(mainUrl + iconImagePath);
+                const responseIconArrayBuffer = await responseIcon.arrayBuffer();
+                const responseIconBuffer = Buffer.from(responseIconArrayBuffer);
+
+                createWriteStream(path.join(cwd, staticSiteFolderName, iconImagePath)).write(responseIconBuffer);
+            });
+        }
+    );
+
+    await Promise.all(taskPromiseList);
 }
 
 async function makeCompanyLogo() {
@@ -191,40 +267,48 @@ async function makeImages(pageList: Array<StaticPageType>) {
         });
     });
 
-    const taskRunner = new TaskRunner({maxWorkerCount: 8});
+    const progressCounterMax: number = imageUrlList.length;
+    const taskRunner = new TaskRunner({
+        maxWorkerCount,
+        onTaskEnd: (taskRunnerData: TaskRunnerOnTaskDoneArgumentType) => {
+            const {restTaskCount, taskInProgressCount} = taskRunnerData;
+            const progressCount = progressCounterMax - restTaskCount - taskInProgressCount;
 
-    // eslint-disable-next-line no-loops/no-loops
-    for (const imageUrl of imageUrlList) {
-        taskRunner.add(async () => {
-            const imageUrlChunks = imageUrl.url.split('/');
-            const [ignoredSpace, ignoredImageApiString, imageSize, imageName] = imageUrlChunks;
+            log(`>> >> [makeStatic]: makeImages: ${formatProgress(progressCount, progressCounterMax)}`);
+        },
+    });
 
-            if (!imageName || !imageSize) {
-                log('----------------------------------------');
-                log(`[ERROR]: makeImages: wrong image url, slug / url: ${imageUrl.slug} / ${imageUrl.url}`);
-                return;
-            }
+    const taskPromiseList: Array<Promise<unknown>> = imageUrlList.map<Promise<unknown>>(
+        (imageUrl: ImageUrlType): Promise<unknown> => {
+            return taskRunner.add(async () => {
+                const imageUrlChunks = imageUrl.url.split('/');
+                const [ignoredSpace, ignoredImageApiString, imageSize, imageName] = imageUrlChunks;
 
-            await makeDirectory(cwd, staticSiteFolderName, 'api-image', imageSize);
+                if (!imageName || !imageSize) {
+                    log('----------------------------------------');
+                    log(`[ERROR]: makeImages: wrong image url, slug / url: ${imageUrl.slug} / ${imageUrl.url}`);
+                    return;
+                }
 
-            const imageResponse: Response = await fetch(mainUrl + imageUrl.url);
+                await tryToMakeDirectorySilent(cwd, staticSiteFolderName, 'api-image', imageSize);
 
-            if (!imageResponse.ok) {
-                log('----------------------------------------');
-                log(`[ERROR]: makeImages: can not get slug / url: ${imageUrl.slug} / ${imageUrl.url}`);
-                return;
-            }
+                const imageResponse: Response = await fetch(mainUrl + imageUrl.url);
 
-            const imageArrayBuffer = await imageResponse.arrayBuffer();
-            const imageBuffer = Buffer.from(imageArrayBuffer);
+                if (!imageResponse.ok) {
+                    log('----------------------------------------');
+                    log(`[ERROR]: makeImages: can not get slug / url: ${imageUrl.slug} / ${imageUrl.url}`);
+                    return;
+                }
 
-            createWriteStream(path.join(cwd, staticSiteFolderName, imageUrl.url)).write(imageBuffer);
+                const imageArrayBuffer = await imageResponse.arrayBuffer();
+                const imageBuffer = Buffer.from(imageArrayBuffer);
 
-            log(`>> >> [makeStatic]: makeImages: ${imageUrlList.indexOf(imageUrl) + 1} / ${imageUrlList.length}`);
-        });
-    }
+                createWriteStream(path.join(cwd, staticSiteFolderName, imageUrl.url)).write(imageBuffer);
+            });
+        }
+    );
 
-    await waitForCallback((): boolean => taskRunner.getCurrentWorkerCount() === 0, 1e5, 1000);
+    await Promise.all(taskPromiseList);
 }
 
 async function makeIndexHtml(pageList: Array<StaticPageType>) {

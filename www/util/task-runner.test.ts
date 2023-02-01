@@ -4,7 +4,7 @@ import {describe, test} from '@jest/globals';
 
 import {waitForTime} from '../../test-unit/util/test-util-time';
 
-import {TaskRunner} from './task-runner';
+import {TaskRunner, TaskRunnerOnTaskDoneArgumentType} from './task-runner';
 
 const defaultTimeOut = 50;
 
@@ -113,78 +113,112 @@ describe('TaskRunner', () => {
         assert.equal(isErrorCaught, true);
     });
 
-    test('Add several tasks and with deifferent time of exection, maxWorkerCount: 1', async () => {
+    test('Add several tasks and with different time of execution, maxWorkerCount: 1', async () => {
         const taskRunner = new TaskRunner({maxWorkerCount: 1});
 
         const listOfTime: Array<number> = [];
 
-        taskRunner.add(async () => {
-            await waitForTime(200);
-            listOfTime.push(200);
-        });
-
-        taskRunner.add(async () => {
-            await waitForTime(100);
-            listOfTime.push(100);
-        });
-
-        taskRunner.add(async () => {
-            await waitForTime(10);
-            listOfTime.push(10);
-        });
-
-        await waitForTime(350); // 200 + 100 + 10 and + 40 for "switching" between tasks
+        await Promise.all([
+            taskRunner.add(async () => {
+                await waitForTime(200);
+                listOfTime.push(200);
+            }),
+            taskRunner.add(async () => {
+                await waitForTime(100);
+                listOfTime.push(100);
+            }),
+            taskRunner.add(async () => {
+                await waitForTime(10);
+                listOfTime.push(10);
+            }),
+        ]);
 
         assert.deepEqual(listOfTime, [200, 100, 10]);
     });
 
-    test('Add several tasks and with deifferent time of exection, maxWorkerCount: 2', async () => {
+    test('Add several tasks and with different time of execution, maxWorkerCount: 2', async () => {
         const taskRunner = new TaskRunner({maxWorkerCount: 2});
 
         const listOfTime: Array<number> = [];
 
-        taskRunner.add(async () => {
-            await waitForTime(200);
-            listOfTime.push(200);
-        });
-
-        taskRunner.add(async () => {
-            await waitForTime(100);
-            listOfTime.push(100);
-        });
-
-        taskRunner.add(async () => {
-            await waitForTime(10);
-            listOfTime.push(10);
-        });
-
-        await waitForTime(205); // most long task, other tasks should be "inside" the longest task
+        await Promise.all([
+            taskRunner.add(async () => {
+                await waitForTime(200);
+                listOfTime.push(200);
+            }),
+            taskRunner.add(async () => {
+                await waitForTime(100);
+                listOfTime.push(100);
+            }),
+            taskRunner.add(async () => {
+                await waitForTime(10);
+                listOfTime.push(10);
+            }),
+        ]);
 
         assert.deepEqual(listOfTime, [100, 10, 200]);
     });
 
-    test('Add several tasks and with deifferent time of exection, maxWorkerCount: 3', async () => {
+    test('Add several tasks and with different time of execution, maxWorkerCount: 3', async () => {
         const taskRunner = new TaskRunner({maxWorkerCount: 3});
 
         const listOfTime: Array<number> = [];
 
-        taskRunner.add(async () => {
-            await waitForTime(200);
-            listOfTime.push(200);
-        });
-
-        taskRunner.add(async () => {
-            await waitForTime(100);
-            listOfTime.push(100);
-        });
-
-        taskRunner.add(async () => {
-            await waitForTime(10);
-            listOfTime.push(10);
-        });
-
-        await waitForTime(205); // most long task, other tasks should be "inside" the longest task
+        await Promise.all([
+            taskRunner.add(async () => {
+                await waitForTime(200);
+                listOfTime.push(200);
+            }),
+            taskRunner.add(async () => {
+                await waitForTime(100);
+                listOfTime.push(100);
+            }),
+            taskRunner.add(async () => {
+                await waitForTime(10);
+                listOfTime.push(10);
+            }),
+        ]);
 
         assert.deepEqual(listOfTime, [10, 100, 200]);
+    });
+
+    test('OnTaskEnd', async () => {
+        const taskRunnerDataList: Array<TaskRunnerOnTaskDoneArgumentType> = [];
+
+        const taskRunner = new TaskRunner({
+            maxWorkerCount: 3,
+            onTaskEnd: (data: TaskRunnerOnTaskDoneArgumentType) => {
+                taskRunnerDataList.push(data);
+            },
+        });
+
+        const listOfTime: Array<number> = [];
+
+        await Promise.all([
+            taskRunner.add(async () => {
+                await waitForTime(200);
+                listOfTime.push(200);
+            }),
+            taskRunner.add(async () => {
+                await waitForTime(100);
+                listOfTime.push(100);
+            }),
+            taskRunner.add(async () => {
+                await waitForTime(10);
+                listOfTime.push(10);
+            }),
+            taskRunner.add(async () => {
+                await waitForTime(300);
+                listOfTime.push(300);
+            }),
+        ]);
+
+        assert.deepEqual(listOfTime, [10, 100, 200, 300]);
+        assert.deepEqual(taskRunnerDataList, [
+            {restTaskCount: 1, taskInProgressCount: 2},
+            {restTaskCount: 0, taskInProgressCount: 2},
+            {restTaskCount: 0, taskInProgressCount: 1},
+            {restTaskCount: 0, taskInProgressCount: 0},
+        ]);
     });
 });
