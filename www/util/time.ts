@@ -97,3 +97,14 @@ export async function waitForCallback(
 
     return waitForCallback(callBack, maxCount - 1, timeOutMs);
 }
+
+export async function takeTimeLog(label: string, task: () => Promise<unknown> | unknown): Promise<void> {
+    const {log, time, timeLog} = console;
+
+    log(`${label}: begin`);
+    time(label);
+
+    await task();
+
+    timeLog(label, ': done');
+}

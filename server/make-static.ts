@@ -9,6 +9,8 @@ import {appRoute} from '../www/component/app/app-route';
 import {appIconPngFileName, companyLogoPngFileName, companyLogoPngHeight, companyLogoPngWidth} from '../www/const';
 import {getPathToImage} from '../www/util/path';
 import {articlePreviewKeyList} from '../www/client-component/search/search-const';
+import {takeTimeLog, waitForCallback} from '../www/util/time';
+import {TaskRunner} from '../www/util/task-runner';
 
 import {articleCrud} from './article/article';
 import {ArticleType} from './article/article-type';
@@ -189,36 +191,40 @@ async function makeImages(pageList: Array<StaticPageType>) {
         });
     });
 
+    const taskRunner = new TaskRunner({maxWorkerCount: 8});
+
     // eslint-disable-next-line no-loops/no-loops
     for (const imageUrl of imageUrlList) {
-        const imageUrlChunks = imageUrl.url.split('/');
-        const [ignoredSpace, ignoredImageApiString, imageSize, imageName] = imageUrlChunks;
+        taskRunner.add(async () => {
+            const imageUrlChunks = imageUrl.url.split('/');
+            const [ignoredSpace, ignoredImageApiString, imageSize, imageName] = imageUrlChunks;
 
-        if (!imageName || !imageSize) {
-            log('----------------------------------------');
-            log(`[ERROR]: makeImages: wrong image url, slug / url: ${imageUrl.slug} / ${imageUrl.url}`);
-            // eslint-disable-next-line no-continue
-            continue;
-        }
+            if (!imageName || !imageSize) {
+                log('----------------------------------------');
+                log(`[ERROR]: makeImages: wrong image url, slug / url: ${imageUrl.slug} / ${imageUrl.url}`);
+                return;
+            }
 
-        await makeDirectory(cwd, staticSiteFolderName, 'api-image', imageSize);
+            await makeDirectory(cwd, staticSiteFolderName, 'api-image', imageSize);
 
-        const imageResponse: Response = await fetch(mainUrl + imageUrl.url);
+            const imageResponse: Response = await fetch(mainUrl + imageUrl.url);
 
-        if (!imageResponse.ok) {
-            log('----------------------------------------');
-            log(`[ERROR]: makeImages: can not get slug / url: ${imageUrl.slug} / ${imageUrl.url}`);
-            // eslint-disable-next-line no-continue
-            continue;
-        }
+            if (!imageResponse.ok) {
+                log('----------------------------------------');
+                log(`[ERROR]: makeImages: can not get slug / url: ${imageUrl.slug} / ${imageUrl.url}`);
+                return;
+            }
 
-        const imageArrayBuffer = await imageResponse.arrayBuffer();
-        const imageBuffer = Buffer.from(imageArrayBuffer);
+            const imageArrayBuffer = await imageResponse.arrayBuffer();
+            const imageBuffer = Buffer.from(imageArrayBuffer);
 
-        createWriteStream(path.join(cwd, staticSiteFolderName, imageUrl.url)).write(imageBuffer);
+            createWriteStream(path.join(cwd, staticSiteFolderName, imageUrl.url)).write(imageBuffer);
 
-        log(`>> >> [makeStatic]: makeImages: ${imageUrlList.indexOf(imageUrl) + 1} / ${imageUrlList.length}`);
+            log(`>> >> [makeStatic]: makeImages: ${imageUrlList.indexOf(imageUrl) + 1} / ${imageUrlList.length}`);
+        });
     }
+
+    await waitForCallback((): boolean => taskRunner.getCurrentWorkerCount() === 0, 1e5, 1000);
 }
 
 async function makeIndexHtml(pageList: Array<StaticPageType>) {
@@ -235,54 +241,31 @@ async function makeIndexHtml(pageList: Array<StaticPageType>) {
 
 // eslint-disable-next-line max-statements
 export async function makeStatic() {
-    const {log} = console;
+    const pageList: Array<StaticPageType> = [];
 
-    log('> [makeStatic]: makeStatic: begin');
+    await takeTimeLog('> [makeStatic]: makeStatic', async () => {
+        await takeTimeLog('>> [makeStatic]: copyStaticFileFolder', copyStaticFileFolder);
 
-    log('>> [makeStatic]: copyStaticFileFolder: begin');
-    await copyStaticFileFolder();
-    log('>> [makeStatic]: copyStaticFileFolder: end');
+        await takeTimeLog('>> [makeStatic]: collectHtmlPages', async () => {
+            pageList.push(...(await collectHtmlPages()));
+        });
 
-    log('>> [makeStatic]: collectHtmlPages: begin');
-    const pageList: Array<StaticPageType> = await collectHtmlPages();
+        await takeTimeLog('>> [makeStatic]: makeHtmlPages', (): Promise<unknown> => makeHtmlPages(pageList));
 
-    log('>> [makeStatic]: collectHtmlPages: end');
+        await takeTimeLog('>> [makeStatic]: makeServicePages', makeServicePages);
 
-    log('>> [makeStatic]: makeHtmlPages: begin');
-    await makeHtmlPages(pageList);
-    log('>> [makeStatic]: makeHtmlPages: end');
+        await takeTimeLog('>> [makeStatic]: makeApiArticle', (): Promise<unknown> => makeApiArticle(pageList));
 
-    log('>> [makeStatic]: makeServicePages: begin');
-    await makeServicePages();
-    log('>> [makeStatic]: makeServicePages: end');
+        await takeTimeLog('>> [makeStatic]: makeApiArticleSearch', makeApiArticleSearch);
 
-    log('>> [makeStatic]: makeApiArticle: begin');
-    await makeApiArticle(pageList);
-    log('>> [makeStatic]: makeApiArticle: end');
+        await takeTimeLog('>> [makeStatic]: makeIcons', makeIcons);
 
-    log('>> [makeStatic]: makeApiArticleSearch: begin');
-    await makeApiArticleSearch();
-    log('>> [makeStatic]: makeApiArticleSearch: end');
+        await takeTimeLog('>> [makeStatic]: makeCompanyLogo', makeCompanyLogo);
 
-    log('>> [makeStatic]: makeIcons: begin');
-    await makeIcons();
-    log('>> [makeStatic]: makeIcons: end');
+        await takeTimeLog('>> [makeStatic]: makeImages', (): Promise<unknown> => makeImages(pageList));
 
-    log('>> [makeStatic]: makeCompanyLogo: begin');
-    await makeCompanyLogo();
-    log('>> [makeStatic]: makeCompanyLogo: end');
+        await takeTimeLog('>> [makeStatic]: copyDistFolder', copyDistributionFolder);
 
-    log('>> [makeStatic]: makeImages: begin');
-    await makeImages(pageList);
-    log('>> [makeStatic]: makeImages: end');
-
-    log('>> [makeStatic]: copyDistFolder: begin');
-    await copyDistributionFolder();
-    log('>> [makeStatic]: copyDistFolder: end');
-
-    log('>> [makeStatic]: makeIndexHtml: begin');
-    await makeIndexHtml(pageList);
-    log('>> [makeStatic]: makeIndexHtml: end');
-
-    log('> [makeStatic]: makeStatic: end');
+        await takeTimeLog('>> [makeStatic]: makeIndexHtml', (): Promise<unknown> => makeIndexHtml(pageList));
+    });
 }

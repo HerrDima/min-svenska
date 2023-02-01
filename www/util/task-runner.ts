@@ -30,8 +30,12 @@ export class TaskRunner {
         this.currentWorkerCount = 0;
     }
 
+    public getCurrentWorkerCount(): number {
+        return this.currentWorkerCount;
+    }
+
     private getHasFreeWorkers(): boolean {
-        return this.currentWorkerCount < this.maxWorkerCount;
+        return this.getCurrentWorkerCount() < this.maxWorkerCount;
     }
 
     add(runningTask: QueueRunningTaskType): Promise<void> {
