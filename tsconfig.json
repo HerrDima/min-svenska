@@ -34,7 +34,7 @@
         "checkJs": false,
         "allowJs": true,
         "declaration": false,
-        "experimentalDecorators": false,
+        "experimentalDecorators": true,
         "useUnknownInCatchVariables": true,
         "exactOptionalPropertyTypes": true,
         "emitDecoratorMetadata": false,

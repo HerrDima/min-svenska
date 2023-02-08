@@ -108,3 +108,27 @@ export async function takeTimeLog(label: string, task: () => Promise<unknown> | 
 
     timeLog(label, ': done');
 }
+
+/*
+export function methodDecoratorExample(): MethodDecorator {
+    return function (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+        const original = descriptor.value;
+
+        descriptor.value = function (...args: any) {
+            const originalResult = original.apply(this, args);
+            return originalResult + 4;
+        };
+    };
+}
+
+const logTakenTime = (target: () => unknown) => {
+    target();
+};
+
+class test {
+    @methodDecoratorExample()
+    method() {
+        return 1;
+    }
+}
+*/
