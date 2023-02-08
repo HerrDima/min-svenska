@@ -109,26 +109,42 @@ export async function takeTimeLog(label: string, task: () => Promise<unknown> | 
     timeLog(label, ': done');
 }
 
-/*
-export function methodDecoratorExample(): MethodDecorator {
-    return function (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
-        const original = descriptor.value;
+export function logTakenTime(prefix: string, className: string) {
+    return (target: unknown, memberName: string, propertyDescriptor: PropertyDescriptor) => {
+        return {
+            get() {
+                // eslint-disable-next-line consistent-this, @typescript-eslint/no-this-alias, unicorn/no-this-assignment
+                const context: unknown = this;
 
-        descriptor.value = function (...args: any) {
-            const originalResult = original.apply(this, args);
-            return originalResult + 4;
+                async function wrapperFunction(): Promise<void> {
+                    const {log, time, timeLog} = console;
+
+                    const fullLabel = `${prefix} [${className}] ${memberName}`.trim();
+
+                    log(`${fullLabel}: begin`);
+                    time(fullLabel);
+
+                    const name = 'value';
+                    const mayBeFunction: unknown = propertyDescriptor[name];
+
+                    if (typeof mayBeFunction === 'function') {
+                        await Reflect.apply(mayBeFunction, context, []);
+                    } else {
+                        throw new TypeError(`[logTakenTime]: ${memberName} is not a function`);
+                    }
+
+                    timeLog(fullLabel, 'done');
+                }
+
+                // eslint-disable-next-line prefer-reflect
+                Object.defineProperty(context, memberName, {
+                    configurable: true,
+                    value: wrapperFunction,
+                    writable: true,
+                });
+
+                return wrapperFunction;
+            },
         };
     };
 }
-
-const logTakenTime = (target: () => unknown) => {
-    target();
-};
-
-class test {
-    @methodDecoratorExample()
-    method() {
-        return 1;
-    }
-}
-*/
