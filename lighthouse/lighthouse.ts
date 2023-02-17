@@ -8,12 +8,8 @@ import path from 'node:path';
 import fileSystem from 'node:fs/promises';
 
 import puppeteer from 'puppeteer';
-import lighthouse, {
-    LighthouseConfigType,
-    LighthouseResultType,
-    LighthouseResultLhrCategoriesType,
-    LighthouseCategoryNameType,
-} from 'lighthouse';
+import lighthouse from 'lighthouse';
+import {RunnerResult} from 'lighthouse/types/externs';
 
 import {makeDirectory} from '../server/file/directory';
 
@@ -28,15 +24,17 @@ const urlList: Array<string> = [
     // '/article/gar-det-bra',
 ];
 
-type LighthouseFormFactorType = LighthouseConfigType['formFactor'];
+type FormFactorType = 'desktop' | 'mobile';
 
-type ResultItemType = {
-    categories: LighthouseResultLhrCategoriesType;
-    formFactor: LighthouseFormFactorType;
+type CategoryNameType = 'accessibility' | 'best-practices' | 'performance' | 'pwa' | 'seo';
+
+type RunnerResultItemType = {
+    formFactor: FormFactorType;
+    result: RunnerResult;
     url: string;
 };
 
-const threshold: Record<LighthouseCategoryNameType, number> = {
+const threshold: Record<CategoryNameType, number> = {
     accessibility: 1,
     'best-practices': 1,
     performance: 0.95,
@@ -44,20 +42,18 @@ const threshold: Record<LighthouseCategoryNameType, number> = {
     seo: 1,
 };
 
-const categoryNameList: Array<LighthouseCategoryNameType> = [
-    'performance',
-    'accessibility',
-    'best-practices',
-    'seo',
-    'pwa',
-];
+const categoryNameList: Array<CategoryNameType> = ['performance', 'accessibility', 'best-practices', 'seo', 'pwa'];
 
-function checkResultItem(resultItem: ResultItemType) {
-    const {categories, formFactor, url} = resultItem;
+function checkResultItem(resultItem: RunnerResultItemType) {
+    const {result, formFactor, url} = resultItem;
 
-    categoryNameList.forEach((categoryName: LighthouseCategoryNameType) => {
-        const {score, title} = categories[categoryName];
+    categoryNameList.forEach((categoryName: CategoryNameType) => {
+        const {score, title} = result.lhr.categories[categoryName];
         const minimalScore = threshold[categoryName];
+
+        if (score === null) {
+            throw new Error('[checkResultItem]: score is null');
+        }
 
         if (score < minimalScore) {
             console.log(
@@ -68,20 +64,25 @@ function checkResultItem(resultItem: ResultItemType) {
     });
 }
 
+type GetLighthouseResultConfigType = {
+    port: number;
+    url: string;
+};
+
 async function getLighthouseResult(
-    config: Record<'port' | 'url', string>
-): Promise<Record<LighthouseFormFactorType, LighthouseResultType>> {
+    config: GetLighthouseResultConfigType
+): Promise<Record<FormFactorType, RunnerResult>> {
     const {url, port} = config;
 
-    const desktop = await lighthouse(url, {
-        disableNetworkThrottling: true,
+    const desktop: RunnerResult | undefined = await lighthouse(url, {
         disableStorageReset: false,
         formFactor: 'desktop',
-        logLevel: 'quiet',
+        logLevel: 'silent',
+        onlyCategories: categoryNameList,
         output: 'html',
         port,
         screenEmulation: {
-            deviceScaleRatio: 1,
+            // deviceScaleRatio: 1,
             // turn on / turin off emulation
             disabled: false,
             height: 800,
@@ -91,15 +92,15 @@ async function getLighthouseResult(
         throttlingMethod: 'provided',
     });
 
-    const mobile = await lighthouse(url, {
-        disableNetworkThrottling: true,
+    const mobile: RunnerResult | undefined = await lighthouse(url, {
         disableStorageReset: false,
         formFactor: 'mobile',
-        logLevel: 'quiet',
+        logLevel: 'silent',
+        onlyCategories: categoryNameList,
         output: 'html',
         port,
         screenEmulation: {
-            deviceScaleRatio: 1,
+            // deviceScaleRatio: 1,
             // turn on / turin off emulation
             disabled: false,
             height: 480,
@@ -108,6 +109,10 @@ async function getLighthouseResult(
         },
         throttlingMethod: 'provided',
     });
+
+    if (!desktop || !mobile) {
+        throw new Error('The result is not defined!');
+    }
 
     return {desktop, mobile};
 }
@@ -123,11 +128,14 @@ async function getLighthouseResult(
 
     await makeDirectory(path.join(cwd, 'lighthouse/report'));
 
-    const resultList: Array<ResultItemType> = [];
+    const resultList: Array<RunnerResultItemType> = [];
 
     // eslint-disable-next-line no-loops/no-loops
     for (const url of urlList) {
-        const lighthouseResult = await getLighthouseResult({port, url: siteUrl + url});
+        const lighthouseResult: Record<FormFactorType, RunnerResult> = await getLighthouseResult({
+            port: Number.parseInt(port, 10),
+            url: siteUrl + url,
+        });
 
         await fileSystem.writeFile(
             path.join(cwd, `/lighthouse/report/url-${url.replace(/\//gi, '_')}-mobile.html`),
@@ -135,8 +143,8 @@ async function getLighthouseResult(
         );
 
         resultList.push({
-            categories: lighthouseResult.mobile.lhr.categories,
             formFactor: 'mobile',
+            result: lighthouseResult.mobile,
             url,
         });
 
@@ -146,8 +154,8 @@ async function getLighthouseResult(
         );
 
         resultList.push({
-            categories: lighthouseResult.desktop.lhr.categories,
             formFactor: 'desktop',
+            result: lighthouseResult.desktop,
             url,
         });
     }
