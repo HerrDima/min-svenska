@@ -4,6 +4,7 @@
 // the same selectors for linter
 
 @use 'sass:math';
+@use 'sass:list';
 
 $color-border: #444;
 $light-gray: #f0f0f0;
@@ -81,18 +82,18 @@ $z-index-wrapper: 5;
 $ascii-spinner-frame-list: '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏';
 
 @mixin spinner-animation-generator($animation-name, $frame-list) {
-    $frame-list-length: length($frame-list);
+    $frame-list-length: list.length($frame-list);
 
     @keyframes #{$animation-name} {
         @each $current-frame in $frame-list {
-            $frame-index: index($frame-list, $current-frame) - 1;
+            $frame-index: list.index($frame-list, $current-frame) - 1;
             #{math.div($frame-index, $frame-list-length) * 100}% {
                 content: $current-frame;
             }
         }
 
         100% {
-            content: nth($frame-list, 1);
+            content: list.nth($frame-list, 1);
         }
     }
 }
@@ -111,7 +112,7 @@ $ascii-spinner-frame-list: '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧
         animation-name: ascii-spinner-animation;
         animation-play-state: running;
         animation-timing-function: linear;
-        content: nth($ascii-spinner-frame-list, 1);
+        content: list.nth($ascii-spinner-frame-list, 1);
         vertical-align: middle;
     }
 }

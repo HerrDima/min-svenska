@@ -7,6 +7,7 @@
         "stylelint-config-sass-guidelines"
     ],
     "rules": {
+        "declaration-property-value-no-unknown": null,
         "import-notation": "string",
         "indentation": 4,
         "selector-pseudo-element-colon-notation": "single",
