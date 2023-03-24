@@ -18,6 +18,9 @@ export const rules: Array<RuleSetRule> = [
         test: /\.tsx?$/,
         use: [
             {
+                loader: 'babel-loader',
+            },
+            {
                 loader: 'ts-loader',
                 options: {
                     configFile: isProduction ? path.join(cwd, 'tsconfig.json') : path.join(cwd, 'tsconfig.dev.json'),
