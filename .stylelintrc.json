@@ -1,12 +1,14 @@
 {
     "plugins": [
-        "stylelint-scss"
+        "stylelint-scss",
+        "stylelint-order"
     ],
     "extends": [
         "stylelint-config-standard",
         "stylelint-config-sass-guidelines"
     ],
     "rules": {
+        "order/properties-alphabetical-order": true,
         "declaration-property-value-no-unknown": null,
         "import-notation": "string",
         "indentation": 4,
