@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {Configuration} from 'webpack';
 import nodeExternals from 'webpack-node-externals';
-// import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+// import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 
 import {optimization} from './setting/optimization';
 import {rules} from './setting/module/rules';

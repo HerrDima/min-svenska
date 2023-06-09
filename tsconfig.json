@@ -32,7 +32,7 @@
         "removeComments": false,
         "skipLibCheck": true,
         "checkJs": false,
-        "allowJs": true,
+        "allowJs": false,
         "declaration": false,
         "experimentalDecorators": true,
         "useUnknownInCatchVariables": true,

@@ -30,8 +30,7 @@ jobs:
             -   run: npm run front:build
             -   run: npm run back:build
             -   run: npm run front:build-library
-            # disable storybook for a while
-            # - run: npm run storybook:build
+            -   run: npm run storybook:build
             -   run: npm run check
             -   run: npm run test:unit
             -   name: Upload coverage to Codecov
