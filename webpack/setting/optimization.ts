@@ -99,6 +99,7 @@ const optimizationProduction: Configuration['optimization'] = {
     minimize: true,
     minimizer: [
         new TerserPlugin({
+            parallel: true,
             terserOptions: {
                 compress: {
                     passes: 3,
