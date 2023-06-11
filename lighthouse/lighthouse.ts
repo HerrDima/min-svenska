@@ -1,6 +1,106 @@
-/* eslint no-process-env: 0 */
+import {launch} from 'chrome-launcher';
 
-/* global process, URL */
+enum CategoryNameEnum {
+    accessibility = 'accessibility',
+    bestPractices = 'best-practices',
+    performance = 'performance',
+    pwa = 'pwa',
+    seo = 'seo',
+}
+
+enum FormFactorEnum {
+    desktop = 'desktop',
+    mobile = 'mobile',
+}
+
+const threshold: Record<CategoryNameEnum, number> = {
+    [CategoryNameEnum.accessibility]: 1,
+    [CategoryNameEnum.bestPractices]: 1,
+    [CategoryNameEnum.performance]: 0.95,
+    [CategoryNameEnum.pwa]: 0.5,
+    [CategoryNameEnum.seo]: 1,
+};
+
+const siteUrl = 'https://herrdima.github.io';
+
+const categoryNameList: Array<CategoryNameEnum> = Object.values(CategoryNameEnum);
+
+async function makeReport(url: string, formFactor: FormFactorEnum): Promise<void> {
+    const {'default': lighthouse} = await import('lighthouse');
+
+    const chrome = await launch({chromeFlags: ['--headless']});
+    // const options = {logLevel: 'info', output: 'html', port: chrome.port} as const;
+    const options = {
+        // logLevel?: 'silent'|'error'|'warn'|'info'|'verbose';
+        logLevel: 'warn',
+        output: 'json',
+        port: chrome.port,
+        settings: {formFactor},
+    } as const;
+    const runnerResult = await lighthouse(`${siteUrl}${url}`, options);
+
+    if (!runnerResult) {
+        console.log(`[Error]: can not open: ${url}`);
+        return;
+    }
+
+    const {categories} = runnerResult.lhr;
+
+    categoryNameList.forEach((categoryName: CategoryNameEnum) => {
+        const {score, title} = categories[categoryName];
+        const minimalScore = threshold[categoryName];
+
+        if (score === null) {
+            throw new Error('[checkResultItem]: score is null');
+        }
+
+        if (score < minimalScore) {
+            console.log(
+                // eslint-disable-next-line max-len
+                `[ERROR] url: ${siteUrl}${url}, form factor: ${formFactor}, title: ${title}, score: ${score}, threshold: ${minimalScore}`
+            );
+        }
+    });
+
+    /*
+        if (!runnerResult?.report) {
+            console.log(`[Error]: can not open: ${url}`);
+        }
+
+        const reportHtml = (runnerResult?.report || []).toString();
+
+        const reportFileName = url === '/' ? 'root' : url.replace('/', '').replace(/\//gi, '__');
+
+        const reportFolderName = 'lighthouse-report'
+
+        await tryToMakeDirectorySilent(reportFolderName)
+        await tryToMakeDirectorySilent(`${reportFileName}/${formFactor}`)
+
+        await fileSystem.writeFile(`${reportFileName}/${formFactor}/${reportFileName}.html`, reportHtml);
+    */
+
+    await chrome.kill();
+}
+
+const urlList: Array<string> = [
+    '/',
+    '/article/sanger-och-texter',
+    '/article/sanger-for-barn',
+    '/article/lille-katt',
+    '/article/banan-melon-kiwi-och-citron',
+    '/article/gar-det-bra',
+];
+
+// eslint-disable-next-line unicorn/prefer-top-level-await
+(async () => {
+    // eslint-disable-next-line no-loops/no-loops
+    for (const url of urlList) {
+        await makeReport(url, FormFactorEnum.mobile);
+        await makeReport(url, FormFactorEnum.desktop);
+    }
+})();
+
+/*
 
 const cwd = process.cwd();
 
@@ -164,3 +264,4 @@ async function getLighthouseResult(
 
     await browser.close();
 })();
+*/

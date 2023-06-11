@@ -91,7 +91,7 @@
     "pre-commit-hook": "npm run check",
     "_postinstall": "cp ./git-hooks/pre-commit ./.git/hooks",
     "__start-site": "sudo nginx -c ~/user/master-git/db-cms/site/nginx/nginx.site.conf -g 'daemon off;'",
-    "lighthouse:run": "ts-node --project ./tsconfig.json --files ./lighthouse/lighthouse.ts",
+    "lighthouse:run": "ts-node --project ./tsconfig.lighthouse.json --files ./lighthouse/lighthouse.ts",
     "lighthouse:ts-coverage": "typescript-coverage-report --threshold=100 --strict=true --project ./lighthouse/",
     "storybook:start-dev": "storybook dev -p 6006",
     "storybook:build": "storybook build",
