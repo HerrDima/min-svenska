@@ -50,8 +50,8 @@ async function makeReport(url: string, formFactor: FormFactorEnum): Promise<void
         const {score, title} = categories[categoryName];
         const minimalScore = threshold[categoryName];
 
-        if (score === null) {
-            throw new Error('[checkResultItem]: score is null');
+        if (typeof score !== 'number') {
+            throw new TypeError('[checkResultItem]: score is NOT a number');
         }
 
         if (score < minimalScore) {
