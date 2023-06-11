@@ -19,7 +19,7 @@
     padding-top: $ui-unit * 2;
 }
 
-@media screen and (max-width: $tablet-width) {
+@media screen and (width <= $tablet-width) {
     .page_children {
         min-height: calc(100vh - 103px);
     }

@@ -5,7 +5,7 @@ import type {GetPathToFileType, GetPathToImageType} from '../../util/path';
 import {Source} from './source';
 
 // max website width is 1200
-const screenWidthList: Array<number> = [1200, 1024, 912, 820, 768, 540, 425, 390, 375, 320, 280, 128];
+const screenWidthList: Array<number> = [1200, 1024, 912, 820, 768, 540, 425, 414, 412, 390, 375, 360, 320, 280, 128];
 
 type ImagePropsType = {
     alt: string;

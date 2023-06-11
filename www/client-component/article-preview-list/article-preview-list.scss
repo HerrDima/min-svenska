@@ -17,13 +17,13 @@
     width: calc((100% - 3 * $ui-unit * 2) / 4);
 }
 
-@media screen and (max-width: $desktop-width) {
+@media screen and (width <= $desktop-width) {
     .article_preview_list_item {
         width: calc((100% - 2 * $ui-unit * 2) / 3);
     }
 }
 
-@media screen and (max-width: $tablet-width) {
+@media screen and (width <= $tablet-width) {
     .article_preview_list_item {
         width: calc((100% - $ui-unit * 2) / 2);
     }

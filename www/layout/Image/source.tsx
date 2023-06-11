@@ -1,9 +1,8 @@
-import {CSSProperties} from 'react';
-import {ScreenWidthNameEnum, getScreenName} from 'react-system-hook';
-
 import {GetPathToImageType} from '../../util/path';
 
-const screenAspectRation: Array<number> = [1, 2, 3];
+import {getFullHorizontalPadding} from './image-helper';
+
+const screenAspectRation: Array<number> = [1, 1.5, 2, 3];
 
 type SourcePropsType = {
     fileName: string;
@@ -16,15 +15,7 @@ type SourcePropsType = {
 export function Source(props: SourcePropsType): JSX.Element | null {
     const {mediaWidth, width, height, fileName, getPathToImage} = props;
     const imageAspect = width / height;
-    const mediaName = getScreenName(mediaWidth);
-
-    const horizontalPaddingMap: Record<ScreenWidthNameEnum, number> = {
-        [ScreenWidthNameEnum.mobile]: 16, // padding 8 + 8
-        [ScreenWidthNameEnum.tablet]: 24, // padding 12 + 12
-        [ScreenWidthNameEnum.desktop]: 32, // padding 16 + 16
-    };
-
-    const imageWidth = mediaWidth - horizontalPaddingMap[mediaName];
+    const imageWidth = mediaWidth - getFullHorizontalPadding(mediaWidth);
     const imageHeight = Math.round(imageWidth / imageAspect);
 
     // prevent extra large image source
@@ -32,17 +23,17 @@ export function Source(props: SourcePropsType): JSX.Element | null {
         return null;
     }
 
-    const styleMap: Record<ScreenWidthNameEnum, CSSProperties> = {
-        [ScreenWidthNameEnum.mobile]: {display: 'block', height: 'auto', width: '100%'},
-        [ScreenWidthNameEnum.tablet]: {display: 'block', height: 'auto', maxWidth: '100%', width: `${imageWidth}px`},
-        [ScreenWidthNameEnum.desktop]: {display: 'block', height: 'auto', maxWidth: '100%', width: `${imageWidth}px`},
-    };
-
     const srcSet: string = screenAspectRation
         .map<string>((multiple: number): string => {
-            const imageSrc = getPathToImage(fileName, {height: imageHeight * multiple, width: imageWidth * multiple});
+            const multipleImageHeight = Math.round(imageHeight * multiple);
+            const multipleImageWidth = Math.round(imageWidth * multiple);
 
-            return imageWidth * multiple <= width ? `${imageSrc} ${multiple}x` : '';
+            const imageSrc = getPathToImage(fileName, {
+                height: multipleImageHeight,
+                width: multipleImageWidth,
+            });
+
+            return multipleImageWidth <= width ? `${imageSrc} ${multiple}x` : '';
         })
         .filter(Boolean)
         .join(', ');
@@ -52,7 +43,6 @@ export function Source(props: SourcePropsType): JSX.Element | null {
             height={String(imageHeight)}
             media={`(min-width: ${mediaWidth}px)`}
             srcSet={srcSet}
-            style={styleMap[mediaName]}
             width={String(imageWidth)}
         />
     );

@@ -1,3 +1,4 @@
+/* stylelint-disable selector-pseudo-class-no-unknown, property-no-unknown */
 $main-font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
 $main-font-family-monospace: 'Lucida Console', 'Monaco', monospace;
 
@@ -14,4 +15,16 @@ $ui-unit: 8px;
 $max-width: 1200px;
 $desktop-width: 1024px;
 $tablet-width: 768px;
-//$phone-width: 480px;
+$phone-width: 480px;
+$width-limiter-desktop-side-padding: $ui-unit * 3;
+$width-limiter-tablet-side-padding: $ui-unit * 2;
+$width-limiter-phone-side-padding: $ui-unit * 1.5;
+
+:export {
+    maxDesktopWidth: $desktop-width;
+    maxPhoneWidth: $phone-width;
+    maxTabletWidth: $tablet-width;
+    widthLimiterDesktopSidePadding: $width-limiter-desktop-side-padding;
+    widthLimiterPhoneSidePadding: $width-limiter-phone-side-padding;
+    widthLimiterTabletSidePadding: $width-limiter-tablet-side-padding;
+}

@@ -112,7 +112,7 @@
     }
 }
 
-@media screen and (max-width: $tablet-width) {
+@media screen and (width <= $tablet-width) {
     .header {
         border-bottom: 1px solid $main-font-color;
     }

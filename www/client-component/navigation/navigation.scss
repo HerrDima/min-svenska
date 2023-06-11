@@ -41,7 +41,7 @@
     }
 }
 
-@media screen and (max-width: $tablet-width) {
+@media screen and (width <= $tablet-width) {
     .navigation {
         background-color: $main-background-color;
         background-image: none;

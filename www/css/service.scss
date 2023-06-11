@@ -8,8 +8,8 @@
     font-family: $main-font-family;
     margin: 0 auto;
     max-width: $max-width;
-    padding-left: $ui-unit * 3;
-    padding-right: $ui-unit * 3;
+    padding-left: $width-limiter-desktop-side-padding;
+    padding-right: $width-limiter-desktop-side-padding;
 }
 
 %ellipsis,
@@ -101,10 +101,18 @@
     display: inline;
 }
 
-@media screen and (max-width: $tablet-width) {
+@media screen and (width <= $tablet-width) {
     %width-limit,
     .width_limit {
-        padding-left: $ui-unit * 2;
-        padding-right: $ui-unit * 2;
+        padding-left: $width-limiter-tablet-side-padding;
+        padding-right: $width-limiter-tablet-side-padding;
+    }
+}
+
+@media screen and (width <= $phone-width) {
+    %width-limit,
+    .width_limit {
+        padding-left: $width-limiter-phone-side-padding;
+        padding-right: $width-limiter-phone-side-padding;
     }
 }
