@@ -6,6 +6,7 @@ import {useMakeExecutableState} from '../../../util/function';
 import {PaginationQueryType, PaginationResultType} from '../../../../server/data-base/data-base-type';
 import {getArticleListPaginationPick} from '../../../service/article/article-api';
 import {CmsPage} from '../layout/cms-page/cms-page';
+import {makeSafeRegExp} from '../../../util/regexp';
 
 import {getArticleTableColumnList, keyForTableListList} from './cms-article-list-const';
 import {ArticleForTableListKeysType, ArticleForTableListType, SortDirectionEnum} from './cms-article-list-type';
@@ -55,8 +56,7 @@ export function CmsArticleList(): JSX.Element {
                         pageSize,
                         sort: {[String(searchedColumn)]: sortDirection},
                     },
-                    // TODO: check for special symbols like [,],{,} and other
-                    query: {[searchedColumn]: new RegExp(searchText, 'i').toString()},
+                    query: {[searchedColumn]: makeSafeRegExp(searchText, 'i').toString()},
                 };
             }
         );
@@ -89,8 +89,7 @@ export function CmsArticleList(): JSX.Element {
                     pageSize,
                     sort: {[String(field)]: sortDirection},
                 },
-                // TODO: check for special symbols like [,],{,} and other
-                query: {[searchedColumn]: new RegExp(searchText, 'i').toString()},
+                query: {[searchedColumn]: makeSafeRegExp(searchText, 'i').toString()},
             };
         });
 

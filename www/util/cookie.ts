@@ -1,13 +1,13 @@
 /* global document */
 
+import {makeSafeRegExpPatter} from './regexp';
+
 type SetCookieOptionsType = {
     [key: string]: Date | boolean | number | string | null;
 };
 
 export function getCookie(name: string): string | null {
-    const matches = document.cookie.match(
-        new RegExp('(?:^|; )' + name.replace(/([$()*+./?[\\\]^{|}])/g, '\\$1') + '=([^;]*)')
-    );
+    const matches = document.cookie.match(new RegExp('(?:^|; )' + makeSafeRegExpPatter(name) + '=([^;]*)'));
 
     return matches ? decodeURIComponent(matches[1]) : null;
 }

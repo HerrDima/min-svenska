@@ -1,5 +1,7 @@
 import {LocaleNameEnum} from '../provider/locale/locale-context-type';
 
+import {makeSafeRegExpPatter} from './regexp';
+
 /*
 export function getHash(data: Array<unknown> | Record<string, unknown> | string): string {
     let result = 0;
@@ -26,8 +28,8 @@ export function findString(input: string, searchQuery: string, flags: '' | 'g' |
     const result: Array<string> = [];
     const searchQueryLength = searchQuery.length;
 
-    const splitRegExp = new RegExp('(?=' + searchQuery + ')', flags);
-    const equalRegExp = new RegExp('^' + searchQuery, flags);
+    const splitRegExp = new RegExp('(?=' + makeSafeRegExpPatter(searchQuery) + ')', flags);
+    const equalRegExp = new RegExp('^' + makeSafeRegExpPatter(searchQuery), flags);
 
     const splitLeftList: Array<string> = input.split(splitRegExp);
 

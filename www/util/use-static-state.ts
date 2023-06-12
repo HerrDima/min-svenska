@@ -2,6 +2,7 @@ import {useState, useEffect, Dispatch, SetStateAction} from 'react';
 
 const savedValueMapString: Record<string, string> = {};
 
+// TODO: remove this
 export function useStaticStringState(
     defaultValue: string,
     savedKey: string

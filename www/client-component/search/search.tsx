@@ -9,6 +9,7 @@ import {useLocale} from '../../provider/locale/locale-context';
 import {classNames} from '../../util/css';
 import {useHotKey} from '../../util/hot-key';
 import {useStaticStringState} from '../../util/use-static-state';
+import {makeSafeRegExp} from '../../util/regexp';
 
 import {articlePreviewKeyList} from './search-const';
 import {SearchArticleType} from './search-type';
@@ -69,7 +70,7 @@ export function Search(props: SearchPropsType): JSX.Element {
     useEffect(() => {
         if (searchString.length >= minLetters) {
             executeArticleList(
-                {title: new RegExp(searchString, 'gi').toString()},
+                {title: makeSafeRegExp(searchString, 'gi').toString()},
                 {
                     pageIndex: 0,
                     pageSize: 0,
