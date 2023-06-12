@@ -8,7 +8,6 @@ import {getArticleClientListPaginationPick} from '../../service/article/article-
 import {useLocale} from '../../provider/locale/locale-context';
 import {classNames} from '../../util/css';
 import {useHotKey} from '../../util/hot-key';
-import {useStaticStringState} from '../../util/use-static-state';
 import {makeSafeRegExp} from '../../util/regexp';
 
 import {articlePreviewKeyList} from './search-const';
@@ -29,7 +28,7 @@ export function Search(props: SearchPropsType): JSX.Element {
     const minLetters = 3;
     const forceBlur = useCallback(() => setHasFocus(false), []);
     const forceFocus = useCallback(() => setHasFocus(true), []);
-    const [searchString, setSearchString] = useStaticStringState('', 'search-value');
+    const [searchString, setSearchString] = useState<string>('');
 
     useHotKey([], 'Escape', forceBlur);
 

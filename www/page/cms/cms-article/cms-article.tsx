@@ -1,10 +1,6 @@
 /* global File */
 
 import {useEffect, useState} from 'react';
-// node_modules/antd/lib/upload/index.d.ts
-// TODO: set declare const Upload: UploadInterface<any>; TO declare const Upload: UploadInterface<unknown>;
-// node_modules/antd/lib/upload/index.d.ts
-// WARNING: set declare const Upload: UploadInterface<any>; TO declare const Upload: UploadInterface<unknown>;
 import {
     Button,
     Checkbox,
