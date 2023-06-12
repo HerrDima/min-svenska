@@ -55,6 +55,7 @@ export function CmsArticleList(): JSX.Element {
                         pageSize,
                         sort: {[String(searchedColumn)]: sortDirection},
                     },
+                    // TODO: check for special symbols like [,],{,} and other
                     query: {[searchedColumn]: new RegExp(searchText, 'i').toString()},
                 };
             }
@@ -88,6 +89,7 @@ export function CmsArticleList(): JSX.Element {
                     pageSize,
                     sort: {[String(field)]: sortDirection},
                 },
+                // TODO: check for special symbols like [,],{,} and other
                 query: {[searchedColumn]: new RegExp(searchText, 'i').toString()},
             };
         });
