@@ -9,7 +9,7 @@ import {ArticleContextType} from '../article/article-context/article-context-typ
 import {articleContext} from '../article/article-context/article-context';
 import {useLocale} from '../../provider/locale/locale-context';
 
-import {getAbsoluteScrollTop, getRelativeScrollTop, handleScrollToTop} from './scroll-restoration-helper';
+import {getAbsoluteScrollTop, getRelativeScrollTop, smoothScrollToTop} from './scroll-restoration-helper';
 import scrollRestorationStyle from './scroll-restoration.scss';
 
 export function ScrollRestoration(): JSX.Element {
@@ -58,7 +58,7 @@ export function ScrollRestoration(): JSX.Element {
                 [scrollRestorationStyle.scroll_restoration__scroll_to_top_button__visible]:
                     scrollTop > topScrollPositionToShowToTopButton,
             })}
-            onClick={handleScrollToTop}
+            onClick={smoothScrollToTop}
             title={getLocalizedString('UI__TO_TOP')}
             type="button"
         >

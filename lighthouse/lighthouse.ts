@@ -13,6 +13,12 @@ enum FormFactorEnum {
     mobile = 'mobile',
 }
 
+type MakeReportArgumentType = {
+    formFactor: FormFactorEnum;
+    port: number;
+    url: string;
+};
+
 const threshold: Record<CategoryNameEnum, number> = {
     [CategoryNameEnum.accessibility]: 1,
     [CategoryNameEnum.bestPractices]: 1,
@@ -21,20 +27,23 @@ const threshold: Record<CategoryNameEnum, number> = {
     [CategoryNameEnum.seo]: 1,
 };
 
-const siteUrl = 'https://herrdima.github.io';
+// const siteUrl = 'https://herrdima.github.io';
+const siteUrl = 'http://localhost:3011';
 
 const categoryNameList: Array<CategoryNameEnum> = Object.values(CategoryNameEnum);
+// const categoryNameList: Array<CategoryNameEnum> = [CategoryNameEnum.bestPractices];
 
-async function makeReport(url: string, formFactor: FormFactorEnum): Promise<void> {
+async function makeReport(config: MakeReportArgumentType): Promise<void> {
+    const {url, port, formFactor} = config;
     const {'default': lighthouse} = await import('lighthouse');
 
-    const chrome = await launch({chromeFlags: ['--headless']});
     // const options = {logLevel: 'info', output: 'html', port: chrome.port} as const;
     const options = {
         // logLevel?: 'silent'|'error'|'warn'|'info'|'verbose';
         logLevel: 'warn',
+        onlyCategories: categoryNameList,
         output: 'json',
-        port: chrome.port,
+        port,
         settings: {formFactor},
     } as const;
     const runnerResult = await lighthouse(`${siteUrl}${url}`, options);
@@ -57,7 +66,7 @@ async function makeReport(url: string, formFactor: FormFactorEnum): Promise<void
         if (score < minimalScore) {
             console.log(
                 // eslint-disable-next-line max-len
-                `[ERROR] url: ${siteUrl}${url}, form factor: ${formFactor}, title: ${title}, score: ${score}, threshold: ${minimalScore}`
+                `[ERROR] url: ${siteUrl}${url}, form factor: ${formFactor}, category: ${title}, score: ${score}, threshold: ${minimalScore}`
             );
         }
     });
@@ -78,26 +87,50 @@ async function makeReport(url: string, formFactor: FormFactorEnum): Promise<void
 
         await fileSystem.writeFile(`${reportFileName}/${formFactor}/${reportFileName}.html`, reportHtml);
     */
-
-    await chrome.kill();
 }
 
 const urlList: Array<string> = [
+    '/article/lille-katt',
+    '/article/hej-sa-petronella',
+    '/article/en-elefant-balanserade',
+    '/article/har-du-sett-min-lilla-katt',
+    '/article/den-olydiga-ballongens-visa',
+    '/article/dar-gaddan-simmar',
+    '/article/donkey-kong',
+    '/article/hooja',
+    '/article/gar-det-bra',
+    '/article/miss-li',
+    '/article/musikband',
+    '/article/sanger-for-barn',
+    '/article/x',
+    '/article/sverige',
+    '/article/svenska-nationalsangen-du-gamla-du-fria',
     '/',
     '/article/sanger-och-texter',
-    '/article/sanger-for-barn',
-    '/article/lille-katt',
     '/article/banan-melon-kiwi-och-citron',
-    '/article/gar-det-bra',
+    '/article/levererar',
+    '/article/vi-ar-nummer-ett',
 ];
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
 (async () => {
+    const chrome = await launch({chromeFlags: ['--headless']});
+
     // eslint-disable-next-line no-loops/no-loops
     for (const url of urlList) {
-        await makeReport(url, FormFactorEnum.mobile);
-        await makeReport(url, FormFactorEnum.desktop);
+        await makeReport({
+            formFactor: FormFactorEnum.mobile,
+            port: chrome.port,
+            url,
+        });
+        await makeReport({
+            formFactor: FormFactorEnum.desktop,
+            port: chrome.port,
+            url,
+        });
     }
+
+    await chrome.kill();
 })();
 
 /*
