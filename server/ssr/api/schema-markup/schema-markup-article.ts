@@ -13,8 +13,9 @@ import {
 } from '../../../../www/const';
 import {ArticleImageDataType, getImageListFromArticle} from '../../../sitemap/sitemap-img-xml';
 import {getClientArticleLinkWithDomain} from '../../../../www/client-component/article/article-helper';
+import {convertStringForHtml} from '../../../../www/util/string';
 
-import {fitTextTo, removeNonJsonSymbols, timeTo0000} from './schema-markup-helper';
+import {fitTextTo, timeTo0000} from './schema-markup-helper';
 
 // eslint-disable-next-line id-length
 export function getSchemaMarkupArticleSsrReplaceData(article: ArticleType): SsrReplaceDataType {
@@ -38,24 +39,24 @@ export function getSchemaMarkupArticleSsrReplaceData(article: ArticleType): SsrR
                     "@type": "WebPage",
                     "@id": "${getClientArticleLinkWithDomain(slug)}"
                 },
-                "headline": "${fitTextTo(removeNonJsonSymbols(title), 110)}",
+                "headline": "${convertStringForHtml(fitTextTo(title, 110))}",
                 "image": ${JSON.stringify(articleImageList)},
                 "datePublished": "${timeTo0000(createdDate)}",
                 "dateModified": "${timeTo0000(updatedDate)}",
                 "author": {
                     "@type": "Person",
-                    "name": "${removeNonJsonSymbols(staffAuthorList.join(', ')) || 'N/A'}",
+                    "name": "${convertStringForHtml(staffAuthorList.join(', ')) || 'N/A'}",
                     "url": "${httpsSiteDomain}"
                 },
                 "publisher": {
                     "@type": "Organization",
-                    "name": "${removeNonJsonSymbols(copyrightName)}",
+                    "name": "${convertStringForHtml(copyrightName)}",
                     "logo": {
                       "@type": "ImageObject",
                       "url": "${companyLogo}"
                     }
                 },
-                "description": "${fitTextTo(removeNonJsonSymbols(descriptionShort || title), 300)}"
+                "description": "${convertStringForHtml(fitTextTo(descriptionShort || title, 300))}"
             }
         </script>`.replace(/\s+/gi, ' ');
 

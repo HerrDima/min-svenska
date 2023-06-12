@@ -70,7 +70,9 @@ export function CmsArticleEdit(): JSX.Element {
 
     return (
         <CmsPage key={articleId}>
-            <Title level={2}>Edit an article: {articleId}</Title>
+            <Title level={2}>
+                Edit an article: {articleToEdit.title} - {articleId}
+            </Title>
             <CmsArticle article={articleToEdit} mode={CmsArticleModeEnum.edit} onFinish={handleOnFinish} />
             <Spinner isShow={isInProgressUpdateArticle} position="fixed" />
         </CmsPage>

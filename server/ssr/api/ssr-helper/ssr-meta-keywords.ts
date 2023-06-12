@@ -1,4 +1,5 @@
 import {ArticleType} from '../../../article/article-type';
+import {convertStringForHtml} from '../../../../www/util/string';
 
 import {SsrReplaceDataType} from './ssr-helper-type';
 
@@ -7,7 +8,7 @@ export function getMetaKeywordsSsrReplaceData(article: ArticleType): SsrReplaceD
     const selector = '<meta data-ssr="meta-keywords" name="keywords" content=""/>';
 
     if (metaKeyWordsSeo) {
-        return {selector, value: `<meta name="keywords" content="${metaKeyWordsSeo}"/>`};
+        return {selector, value: `<meta name="keywords" content="${convertStringForHtml(metaKeyWordsSeo)}"/>`};
     }
 
     return {selector, value: ''};

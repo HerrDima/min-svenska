@@ -1,9 +1,5 @@
 import {humanNormalizeString} from '../../../../www/util/human';
 
-export function removeNonJsonSymbols(rawString: string): string {
-    return rawString.replace(/["[\]{}]/g, '');
-}
-
 export function fitTextTo(fullString: string, maxSize: number): string {
     const cleanString = humanNormalizeString(fullString);
 

@@ -387,7 +387,7 @@ export function CmsArticle(props: CmsArticlePropsType): JSX.Element {
 
             <Form.Item
                 initialValue={descriptionShort}
-                label="Short description, plain text only, used for Open Graph:"
+                label="Short description, plain text only, used for Open Graph, Twitter Card and markup schema (https://schema.org):"
                 name="descriptionShort"
             >
                 <TextArea placeholder="Some short description is here..." rows={3} />

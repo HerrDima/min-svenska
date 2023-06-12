@@ -73,3 +73,14 @@ export function formatProgress(current: number, max: number): string {
 
     return `[${progressString}] ${currentString} / ${max}`;
 }
+
+export function convertStringForHtml(value: string): string {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/>/g, '&gt;')
+        .replace(/</g, '&lt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .replace(/\//g, '&#47;')
+        .replace(/\\/g, '&#92;');
+}

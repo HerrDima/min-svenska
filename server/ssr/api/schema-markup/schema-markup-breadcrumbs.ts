@@ -4,8 +4,7 @@
 import {ArticlePreviewType, ArticleType} from '../../../article/article-type';
 import {SsrReplaceDataType} from '../ssr-helper/ssr-helper-type';
 import {getClientArticleLinkWithDomain} from '../../../../www/client-component/article/article-helper';
-
-import {removeNonJsonSymbols} from './schema-markup-helper';
+import {convertStringForHtml} from '../../../../www/util/string';
 
 type SchemaBreadcrumbItemType = {
     '@type': 'ListItem';
@@ -32,7 +31,7 @@ export function getSchemaMarkupBreadcrumbsSsrReplaceData(
             return {
                 '@type': 'ListItem',
                 item: getClientArticleLinkWithDomain(parentInList.slug),
-                name: removeNonJsonSymbols(parentInList.title),
+                name: convertStringForHtml(parentInList.title),
                 position: index + 1,
             };
         }
