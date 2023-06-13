@@ -30,8 +30,8 @@ const threshold: Record<CategoryNameEnum, number> = {
 // const siteUrl = 'https://herrdima.github.io';
 const siteUrl = 'http://localhost:3011';
 
-// const categoryNameList: Array<CategoryNameEnum> = Object.values(CategoryNameEnum);
-const categoryNameList: Array<CategoryNameEnum> = [CategoryNameEnum.seo];
+const categoryNameList: Array<CategoryNameEnum> = Object.values(CategoryNameEnum);
+// const categoryNameList: Array<CategoryNameEnum> = [CategoryNameEnum.seo];
 
 async function makeReport(config: MakeReportArgumentType): Promise<void> {
     const {url, port, formFactor} = config;
